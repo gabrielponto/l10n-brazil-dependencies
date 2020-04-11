@@ -1,3 +1,2 @@
-# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
-
+# -*- coding: utf-8 -*-
 from . import account_move_line

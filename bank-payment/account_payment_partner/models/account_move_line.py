@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright 2016 Akretion (http://www.akretion.com/)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
@@ -10,7 +11,6 @@ class AccountMoveLine(models.Model):
     payment_mode_id = fields.Many2one(
         'account.payment.mode',
         string='Payment Mode',
-        domain="[('company_id', '=', company_id)]",
         ondelete='restrict',
         index=True,
     )

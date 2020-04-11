@@ -1,19 +1,17 @@
+# -*- coding: utf-8 -*-
 # © 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
-# Copyright 2018 Tecnativa - Luis M. Ontalba
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-import base64
 import logging
 
-from odoo import fields
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 from odoo.modules.module import get_module_resource
 
 
 _logger = logging.getLogger(__name__)
 
 
-class TestPaymentReturnFile(SavepointCase):
+class TestPaymentReturnFile(TransactionCase):
     """Check whether payment returns with transactions correctly imported.
 
     No actual tests are done in this class, implementations are in
@@ -21,8 +19,7 @@ class TestPaymentReturnFile(SavepointCase):
     """
 
     def _test_transaction(
-            self, return_obj, reference=False, returned_amount=False,
-            reason_add_info=False):
+            self, return_obj, reference=False, returned_amount=False):
         """Check whether transaction with attributes passed was created.
 
         Actually this method also tests whether automatic creation of
@@ -34,9 +31,6 @@ class TestPaymentReturnFile(SavepointCase):
             domain.append(('amount', '=', returned_amount))
         if reference:
             domain.append(('reference', '=', reference))
-        if reason_add_info:
-            domain.append(
-                ('reason_additional_information', '=', reason_add_info))
         ids = transaction_model.search(domain)
         if not ids:
             # We will get assertion error, but to solve we need to see
@@ -65,8 +59,8 @@ class TestPaymentReturnFile(SavepointCase):
             'test_files',
             file_name
         )
-        return_file = base64.b64encode(open(
-            return_path, 'rb').read())
+        return_file = open(
+            return_path, 'rb').read().encode('base64')
         bank_return_id = import_model.create(
             dict(
                 data_file=return_file,
@@ -88,9 +82,9 @@ class TestPaymentReturnFile(SavepointCase):
         return_obj = ids[0]
         if date:
             self.assertEqual(
-                fields.Date.to_string(return_obj.date), date,
+                return_obj.date, date,
                 'Date %s not equal to expected %s' %
-                (fields.Date.to_string(return_obj.date), date)
+                (return_obj.date, date)
             )
         if transactions:
             for transaction in transactions:

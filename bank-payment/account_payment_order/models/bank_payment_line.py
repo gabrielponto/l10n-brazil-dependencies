@@ -1,6 +1,6 @@
-# Copyright 2015-2016 Akretion - Alexis de Lattre
-# Copyright 2018 Tecnativa - Pedro M. Baeza
-# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
+# -*- coding: utf-8 -*-
+# © 2015-2016 Akretion - Alexis de Lattre <alexis.delattre@akretion.com>
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
@@ -15,7 +15,7 @@ class BankPaymentLine(models.Model):
         readonly=True)
     order_id = fields.Many2one(
         'account.payment.order', string='Order', ondelete='cascade',
-        index=True, readonly=True)
+        index=True)
     payment_type = fields.Selection(
         related='order_id.payment_type', string="Payment Type",
         readonly=True, store=True)
@@ -52,11 +52,9 @@ class BankPaymentLine(models.Model):
         string='Communication', required=True,
         readonly=True)
     company_id = fields.Many2one(
-        'res.company',
         related='order_id.payment_mode_id.company_id', store=True,
         readonly=True)
     company_currency_id = fields.Many2one(
-        'res.currency',
         related='order_id.payment_mode_id.company_id.currency_id',
         readonly=True, store=True)
 
@@ -79,10 +77,9 @@ class BankPaymentLine(models.Model):
         for bline in self:
             amount_currency = sum(
                 bline.mapped('payment_line_ids.amount_currency'))
-            amount_company_currency = bline.currency_id._convert(
-                amount_currency, bline.company_currency_id, bline.company_id,
-                bline.date or fields.Date.today(),
-            )
+            amount_company_currency = bline.currency_id.with_context(
+                date=bline.date).compute(
+                    amount_currency, bline.company_currency_id)
             bline.amount_currency = amount_currency
             bline.amount_company_currency = amount_company_currency
 
@@ -102,9 +99,9 @@ class BankPaymentLine(models.Model):
         """
         self.ensure_one()
         if self.order_id.payment_mode_id.move_option == 'date':
-            hashcode = fields.Date.to_string(self.date)
+            hashcode = self.date
         else:
-            hashcode = str(self.id)
+            hashcode = unicode(self.id)
         return hashcode
 
     @api.multi
@@ -161,11 +158,12 @@ class BankPaymentLine(models.Model):
 
     @api.multi
     def unlink(self):
-        for line in self:
-            order_state = line.order_id.state
-            if order_state == 'uploaded':
-                raise UserError(_(
-                    'Cannot delete a payment order line whose payment order is'
-                    ' in state \'%s\'. You need to cancel it first.')
-                    % order_state)
+        if not self.env.context.get('force_unlink'):
+            for line in self:
+                order_state = line.order_id.state
+                if order_state == 'uploaded':
+                    raise UserError(_(
+                        'Cannot delete a payment order line whose payment '
+                        'order is in state \'%s\'. You need to cancel it '
+                        'first.') % order_state)
         return super(BankPaymentLine, self).unlink()

@@ -1,9 +1,10 @@
-# © 2016 Akretion (<https://www.akretion.com>).
-# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
+# -*- coding: utf-8 -*-
+# © 2016 Akretion (<http://www.akretion.com>).
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 {
     'name': 'Account Payment Mode',
-    'version': '12.0.1.0.1',
+    'version': '10.0.1.0.2',
     'license': 'AGPL-3',
     'author': "Akretion,Odoo Community Association (OCA)",
     'website': 'https://github.com/OCA/bank-payment',

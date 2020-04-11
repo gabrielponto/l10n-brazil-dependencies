@@ -1,11 +1,13 @@
+# -*- coding: utf-8 -*-
 # Copyright 2018 Camptocamp SA
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 {
     "name": "Currency Monthly Rate",
-    "version": "12.0.1.0.0",
+    "version": "10.0.1.0.0",
     "author": "Camptocamp, Odoo Community Association (OCA)",
     "license": "AGPL-3",
     "category": "Generic Modules/Accounting",
+    "description": """Use monthly currency rates""",
     "website": "https://github.com/OCA/currency",
     "depends": ['base'],
     "data": [

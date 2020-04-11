@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (C) 2014-Today GRAP (http://www.grap.coop)
 # @author: Sylvain LE GAL (https://twitter.com/legalsylvain)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
@@ -7,21 +8,15 @@ from odoo.exceptions import ValidationError
 
 
 class AccountProductFiscalClassification(models.Model):
+    """Fiscal Classification of customer and supplier taxes.
+    This classification is linked to a product to select a bundle of taxes
+     in one time."""
     _name = 'account.product.fiscal.classification'
-    _description = 'Fiscal Classification'
+    _inherit = 'account.product.fiscal.classification.model'
 
     # Default Section
     def _default_company_id(self):
         return self.env['res.users']._get_company()
-
-    name = fields.Char(required=True, translate=True)
-
-    description = fields.Text()
-
-    active = fields.Boolean(
-        default=True,
-        help="If unchecked, it will allow you to hide the Fiscal"
-        " Classification without removing it.")
 
     company_id = fields.Many2one(
         comodel_name='res.company', default=_default_company_id,
@@ -51,19 +46,15 @@ class AccountProductFiscalClassification(models.Model):
         string='Sale Taxes', oldname="sale_base_tax_ids", domain="""[
             ('type_tax_use', 'in', ['sale', 'all'])]""")
 
-    usage_group_id = fields.Many2one(
-        comodel_name='res.groups', string="Usage Group", help="If defined"
-        ", the user should be member to this group, to use this fiscal"
-        " classification when creating or updating products")
-
     # Compute Section
+    @api.multi
     def _compute_product_tmpl_info(self):
-        for record in self:
-            res = record.env['product.template'].with_context(
-                active_test=False).search([
-                    ('fiscal_classification_id', '=', record.id)])
-            record.product_tmpl_ids = res
-            record.product_tmpl_qty = len(res)
+        for fiscal_classif in self:
+            res = self.env['product.template'].search([
+                ('fiscal_classification_id', '=', fiscal_classif.id), '|',
+                ('active', '=', False), ('active', '=', True)])
+            fiscal_classif.product_tmpl_ids = res
+            fiscal_classif.product_tmpl_qty = len(res)
 
     # Overload Section
     @api.multi
@@ -84,7 +75,7 @@ class AccountProductFiscalClassification(models.Model):
                     "You cannot delete The Fiscal Classification '%s' because"
                     " it contents %s products. Please move products"
                     " to another Fiscal Classification first.") % (
-                        fc.name, fc.product_tmpl_qty))
+                    fc.name, fc.product_tmpl_qty))
         return super(AccountProductFiscalClassification, self).unlink()
 
     # Custom Sections
@@ -105,15 +96,15 @@ class AccountProductFiscalClassification(models.Model):
                 return fc.id
 
         # create new Fiscal classification if not found
-        if not sale_tax_ids and not purchase_tax_ids:
+        if len(sale_tax_ids) == 0 and len(purchase_tax_ids) == 0:
             name = _('No taxes')
-        elif not purchase_tax_ids:
+        elif len(purchase_tax_ids) == 0:
             name = _('No Purchase Taxes - Sale Taxes: ')
             for tax in at_obj.browse(sale_tax_ids):
                 name += tax.description and tax.description or tax.name
                 name += ' + '
             name = name[:-3]
-        elif not sale_tax_ids:
+        elif len(sale_tax_ids) == 0:
             name = _('Purchase Taxes: ')
             for tax in at_obj.browse(purchase_tax_ids):
                 name += tax.description and tax.description or tax.name
@@ -131,6 +122,8 @@ class AccountProductFiscalClassification(models.Model):
                 name += tax.description and tax.description or tax.name
                 name += ' + '
             name = name[:-3]
+        name = name[:self._MAX_LENGTH_NAME] \
+            if len(name) > self._MAX_LENGTH_NAME else name
         return self.create({
             'name': name,
             'company_id': company_id,

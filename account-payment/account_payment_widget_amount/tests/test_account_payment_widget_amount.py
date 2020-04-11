@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright 2017 Eficent Business and IT Consulting Services, S.L.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
@@ -90,10 +91,18 @@ class TestAccountPaymentWidgetAmount(TransactionCase):
         # of the company currency.
         self.new_usd = self.env['res.currency'].create({
             'name': 'us2',
-            'symbol': '$²',
+            'symbol': "$²",
             'rate_ids': [(0, 0, {'rate': 2,
                                  'name': time.strftime('%Y-%m-%d')})],
         })
+
+    def _get_move_reconciled(self, payment):
+        rec = True
+        for aml in payment.move_line_ids.filtered(
+                lambda x: x.account_id.reconcile):
+            if not aml.reconciled:
+                rec = False
+        payment.move_reconciled = rec
 
     def test_01(self):
         """ Tests that I can create an invoice in company currency,
@@ -141,12 +150,12 @@ class TestAccountPaymentWidgetAmount(TransactionCase):
         invoice.with_context(paid_amount=100.0).assign_outstanding_credit(
             payment_ml.id)
         self.assertEqual(invoice.residual, 100.0)
-        self.assertFalse(payment.move_reconciled)
+        self.assertFalse(self._get_move_reconciled(payment))
         invoice.with_context(paid_amount=100.0).assign_outstanding_credit(
             payment_ml.id)
         self.assertEqual(invoice.residual, 0.0)
         self.assertEqual(invoice.state, 'paid')
-        self.assertFalse(payment.move_reconciled)
+        self.assertFalse(self._get_move_reconciled(payment))
 
     def test_02(self):
         """ Tests that I can create an invoice in foreign currency,
@@ -200,7 +209,7 @@ class TestAccountPaymentWidgetAmount(TransactionCase):
             payment_ml.id)
         self.assertEqual(invoice.residual_signed, 100.0)
         self.assertEqual(invoice.state, 'open')
-        self.assertFalse(payment.move_reconciled)
+        self.assertFalse(self._get_move_reconciled(payment))
         self.assertEqual(payment_ml.amount_residual, -950.0)
 
     def test_03(self):
@@ -256,7 +265,7 @@ class TestAccountPaymentWidgetAmount(TransactionCase):
             payment_ml.id)
         self.assertEqual(invoice.residual_signed, -100.0)
         self.assertEqual(invoice.state, 'open')
-        self.assertFalse(payment.move_reconciled)
+        self.assertFalse(self._get_move_reconciled(payment))
         self.assertEqual(payment_ml.amount_residual, 950.0)
 
     def test_04(self):
@@ -310,7 +319,7 @@ class TestAccountPaymentWidgetAmount(TransactionCase):
             payment_ml.id)
         self.assertEqual(invoice.residual_signed, 100.0)
         self.assertEqual(invoice.state, 'open')
-        self.assertFalse(payment.move_reconciled)
+        self.assertFalse(self._get_move_reconciled(payment))
         self.assertEqual(payment_ml.amount_residual, -400.0)
         self.assertEqual(payment_ml.amount_residual_currency, -800.0)
         invoice.with_context(paid_amount=100.0).assign_outstanding_credit(
@@ -367,9 +376,9 @@ class TestAccountPaymentWidgetAmount(TransactionCase):
         invoice.with_context(paid_amount=100.0).assign_outstanding_credit(
             payment_ml.id)
         self.assertEqual(invoice.residual, 100.0)
-        self.assertFalse(payment.move_reconciled)
+        self.assertFalse(self._get_move_reconciled(payment))
         invoice.with_context(paid_amount=100.0).assign_outstanding_credit(
             payment_ml.id)
         self.assertEqual(invoice.residual, 0.0)
         self.assertEqual(invoice.state, 'paid')
-        self.assertFalse(payment.move_reconciled)
+        self.assertFalse(self._get_move_reconciled(payment))

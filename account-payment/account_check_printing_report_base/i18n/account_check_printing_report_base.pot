@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
@@ -14,7 +14,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: account_check_printing_report_base
-#: model_terms:ir.ui.view,arch_db:account_check_printing_report_base.report_check_base
+#: model:ir.ui.view,arch_db:account_check_printing_report_base.report_check_base
 msgid "<b>Check Amount:</b>"
 msgstr ""
 
@@ -24,18 +24,18 @@ msgid "Account Payment Check Report"
 msgstr ""
 
 #. module: account_check_printing_report_base
-#: model:ir.model.fields,field_description:account_check_printing_report_base.field_account_journal__check_print_auto
+#: model:ir.model.fields,field_description:account_check_printing_report_base.field_account_journal_check_print_auto
 msgid "Automatic check printing"
 msgstr ""
 
 #. module: account_check_printing_report_base
-#: model_terms:ir.ui.view,arch_db:account_check_printing_report_base.report_check_base
+#: model:ir.ui.view,arch_db:account_check_printing_report_base.report_check_base
 msgid "Balance Due"
 msgstr ""
 
 #. module: account_check_printing_report_base
-#: model_terms:ir.ui.view,arch_db:account_check_printing_report_base.account_payment_check_report_form
-#: model_terms:ir.ui.view,arch_db:account_check_printing_report_base.account_payment_check_report_tree
+#: model:ir.ui.view,arch_db:account_check_printing_report_base.account_payment_check_report_form
+#: model:ir.ui.view,arch_db:account_check_printing_report_base.account_payment_check_report_tree
 msgid "Check Layout"
 msgstr ""
 
@@ -46,13 +46,12 @@ msgid "Check Layouts"
 msgstr ""
 
 #. module: account_check_printing_report_base
-#: model:ir.model.fields,field_description:account_check_printing_report_base.field_account_journal__check_layout_id
-#: model:ir.model.fields,field_description:account_check_printing_report_base.field_res_company__check_layout_id
+#: model:ir.model.fields,field_description:account_check_printing_report_base.field_res_company_check_layout_id
 msgid "Check format"
 msgstr ""
 
 #. module: account_check_printing_report_base
-#: model_terms:ir.ui.view,arch_db:account_check_printing_report_base.res_company_form_view_inherited
+#: model:ir.ui.view,arch_db:account_check_printing_report_base.res_company_form_view_inherited
 msgid "Check printing layout"
 msgstr ""
 
@@ -62,39 +61,40 @@ msgid "Companies"
 msgstr ""
 
 #. module: account_check_printing_report_base
-#: model:ir.model.fields,field_description:account_check_printing_report_base.field_account_payment_check_report__create_uid
+#: model:ir.model.fields,field_description:account_check_printing_report_base.field_account_payment_check_report_create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: account_check_printing_report_base
-#: model:ir.model.fields,field_description:account_check_printing_report_base.field_account_payment_check_report__create_date
+#: model:ir.model.fields,field_description:account_check_printing_report_base.field_account_payment_check_report_create_date
 msgid "Created on"
 msgstr ""
 
 #. module: account_check_printing_report_base
-#: model:ir.model.fields,help:account_check_printing_report_base.field_account_journal__check_print_auto
+#: model:ir.model.fields,help:account_check_printing_report_base.field_account_journal_check_print_auto
 msgid "Default check for the company is printed automatically when invoice payment is validated"
 msgstr ""
 
 #. module: account_check_printing_report_base
-#: model_terms:ir.ui.view,arch_db:account_check_printing_report_base.report_check_base
+#: model:ir.ui.view,arch_db:account_check_printing_report_base.report_check_base
 msgid "Description"
 msgstr ""
 
 #. module: account_check_printing_report_base
-#: model:ir.model.fields,field_description:account_check_printing_report_base.field_account_payment_check_report__display_name
-#: model:ir.model.fields,field_description:account_check_printing_report_base.field_report_account_check_printing_report_base_report_check_base__display_name
+#: model:ir.model.fields,field_description:account_check_printing_report_base.field_account_payment_check_report_display_name
+#: model:ir.model.fields,field_description:account_check_printing_report_base.field_report_account_check_printing_report_base_report_check_base_display_name
 msgid "Display Name"
 msgstr ""
 
 #. module: account_check_printing_report_base
-#: model_terms:ir.ui.view,arch_db:account_check_printing_report_base.report_check_base
-msgid "Due Date"
+#: model:ir.ui.view,arch_db:account_check_printing_report_base.report_check_base
+msgid "Due\n"
+"                                                Date"
 msgstr ""
 
 #. module: account_check_printing_report_base
-#: model:ir.model.fields,field_description:account_check_printing_report_base.field_account_payment_check_report__id
-#: model:ir.model.fields,field_description:account_check_printing_report_base.field_report_account_check_printing_report_base_report_check_base__id
+#: model:ir.model.fields,field_description:account_check_printing_report_base.field_account_payment_check_report_id
+#: model:ir.model.fields,field_description:account_check_printing_report_base.field_report_account_check_printing_report_base_report_check_base_id
 msgid "ID"
 msgstr ""
 
@@ -104,38 +104,38 @@ msgid "Journal"
 msgstr ""
 
 #. module: account_check_printing_report_base
-#: model:ir.model.fields,field_description:account_check_printing_report_base.field_account_payment_check_report____last_update
-#: model:ir.model.fields,field_description:account_check_printing_report_base.field_report_account_check_printing_report_base_report_check_base____last_update
+#: model:ir.model.fields,field_description:account_check_printing_report_base.field_account_payment_check_report___last_update
+#: model:ir.model.fields,field_description:account_check_printing_report_base.field_report_account_check_printing_report_base_report_check_base___last_update
 msgid "Last Modified on"
 msgstr ""
 
 #. module: account_check_printing_report_base
-#: model:ir.model.fields,field_description:account_check_printing_report_base.field_account_payment_check_report__write_uid
+#: model:ir.model.fields,field_description:account_check_printing_report_base.field_account_payment_check_report_write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: account_check_printing_report_base
-#: model:ir.model.fields,field_description:account_check_printing_report_base.field_account_payment_check_report__write_date
+#: model:ir.model.fields,field_description:account_check_printing_report_base.field_account_payment_check_report_write_date
 msgid "Last Updated on"
 msgstr ""
 
 #. module: account_check_printing_report_base
-#: model:ir.model.fields,field_description:account_check_printing_report_base.field_account_payment_check_report__name
+#: model:ir.model.fields,field_description:account_check_printing_report_base.field_account_payment_check_report_name
 msgid "Name"
 msgstr ""
 
 #. module: account_check_printing_report_base
-#: model_terms:ir.ui.view,arch_db:account_check_printing_report_base.report_check_base
+#: model:ir.ui.view,arch_db:account_check_printing_report_base.report_check_base
 msgid "Original Amount"
 msgstr ""
 
 #. module: account_check_printing_report_base
-#: model_terms:ir.ui.view,arch_db:account_check_printing_report_base.report_check_base
+#: model:ir.ui.view,arch_db:account_check_printing_report_base.report_check_base
 msgid "Payment"
 msgstr ""
 
 #. module: account_check_printing_report_base
-#: model:ir.actions.report,name:account_check_printing_report_base.action_report_check_base
+#: model:ir.actions.report.xml,name:account_check_printing_report_base.action_report_check_base
 msgid "Payment Check Base"
 msgstr ""
 
@@ -146,16 +146,22 @@ msgstr ""
 
 #. module: account_check_printing_report_base
 #: model:ir.model,name:account_check_printing_report_base.model_account_register_payments
-msgid "Register Payments"
+msgid "Register payments on multiple invoices"
+msgstr ""
+
+#. module: account_check_printing_report_base
+#: model:ir.model.fields,field_description:account_check_printing_report_base.field_account_payment_check_report_report
+msgid "Report name"
+msgstr ""
+
+#. module: account_check_printing_report_base
+#: code:addons/account_check_printing_report_base/report/check_print.py:118
+#, python-format
+msgid "You must define a check layout"
 msgstr ""
 
 #. module: account_check_printing_report_base
 #: model:ir.model,name:account_check_printing_report_base.model_report_account_check_printing_report_base_report_check_base
-msgid "Report Check Print"
-msgstr ""
-
-#. module: account_check_printing_report_base
-#: model:ir.model.fields,field_description:account_check_printing_report_base.field_account_payment_check_report__report
-msgid "Report name"
+msgid "report.account_check_printing_report_base.report_check_base"
 msgstr ""
 

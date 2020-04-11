@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright 2011-2012 7 i TRIA <http://www.7itria.cat>
 # Copyright 2011-2012 Avanzosc <http://www.avanzosc.com>
 # Copyright 2013 Pedro M. Baeza <pedro.baeza@tecnativa.com>
@@ -10,7 +11,6 @@ from odoo import _, api, fields, models
 from odoo.exceptions import Warning as UserError
 from odoo.exceptions import ValidationError
 import odoo.addons.decimal_precision as dp
-from odoo.tools import float_compare
 
 
 class PaymentReturn(models.Model):
@@ -50,12 +50,6 @@ class PaymentReturn(models.Model):
         string='Reference to the created journal entry',
         states={'done': [('readonly', True)],
                 'cancelled': [('readonly', True)]})
-    total_amount = fields.Float(
-        string="Total amount",
-        compute='_compute_total_amount',
-        readonly=True,
-        store=False,
-    )
     state = fields.Selection(
         selection=[('draft', 'Draft'),
                    ('imported', 'Imported'),
@@ -63,24 +57,6 @@ class PaymentReturn(models.Model):
                    ('cancelled', 'Cancelled')],
         string='State', readonly=True, default='draft',
         track_visibility='onchange')
-    auto_reconcile_failure = fields.Boolean(
-        string="Automatic reconciliation failure",
-        compute='_compute_auto_reconcile_failure',
-        readonly=True,
-        store=False,
-    )
-
-    @api.multi
-    def _compute_auto_reconcile_failure(self):
-        """
-        This method computes the auto_reconcile_failure field which is as flag
-        allowing to detect the unreconciled "done" payment returns with
-        automatic reconciliation enabled.
-        """
-        for rec in self.filtered(lambda r: r.state == 'done' and
-                                 r.journal_id.return_auto_reconcile):
-            crdt_move_line = rec.move_id.line_ids.filtered(lambda l: l.credit)
-            rec.auto_reconcile_failure = not crdt_move_line.reconciled
 
     @api.multi
     @api.constrains('line_ids')
@@ -110,27 +86,9 @@ class PaymentReturn(models.Model):
                     append_error(line)
         if error_list:
             raise ValidationError(
-                _("Payment reference must be unique"
+                _("Payment reference must be unique!"
                   "\n%s") % '\n'.join(error_list)
             )
-
-    @api.multi
-    @api.depends('line_ids.amount')
-    def _compute_total_amount(self):
-        return_line_model = self.env['payment.return.line']
-        domain = [('return_id', 'in', self.ids)]
-        res = return_line_model.read_group(
-            domain=domain,
-            fields=['return_id', 'amount'],
-            groupby=['return_id'],
-        )
-        lines_dict = {}
-        for dic in res:
-            return_id = dic['return_id'][0]
-            total_amount = dic['amount']
-            lines_dict[return_id] = total_amount
-        for rec in self:
-            rec.total_amount = lines_dict.get(rec.id, 0.0)
 
     def _get_move_amount(self, return_line):
         return return_line.amount
@@ -167,44 +125,6 @@ class PaymentReturn(models.Model):
         }
 
     @api.multi
-    def _prepare_move_line(self, move, total_amount):
-        self.ensure_one()
-        return {
-            'name': move.ref,
-            'debit': 0.0,
-            'credit': total_amount,
-            'account_id': self.journal_id.default_credit_account_id.id,
-            'move_id': move.id,
-            'journal_id': move.journal_id.id,
-        }
-
-    @api.multi
-    def _auto_reconcile(self, credit_move_line, all_move_lines, total_amount):
-        """
-        Reconcile the payment return if the option return_auto_reconcile is
-        enabled on the journal.
-        """
-        self.ensure_one()
-        if not self.journal_id.return_auto_reconcile:
-            return
-        rounding = self.env.user.company_id.currency_id.rounding
-        counterpart_move_lines = self.env['account.move.line'].browse()
-        for move_line in all_move_lines:
-            move = move_line.move_id
-            if len(move.line_ids) != 2:  # auto.reconciliation not possible
-                return
-            counterpart_move_lines |= move.line_ids.filtered(
-                lambda line: line != move_line)
-        if counterpart_move_lines and float_compare(
-                total_amount, sum(counterpart_move_lines.mapped('debit')),
-                precision_rounding=rounding) == 0 and not any(
-                rec.reconciled for rec in counterpart_move_lines):
-            lines_to_reconcile = credit_move_line | counterpart_move_lines
-            if len(lines_to_reconcile.mapped('account_id')) != 1:
-                return
-            lines_to_reconcile.reconcile()
-
-    @api.multi
     def action_confirm(self):
         self.ensure_one()
         # Check for incomplete lines
@@ -212,40 +132,68 @@ class PaymentReturn(models.Model):
             raise UserError(
                 _("You must input all moves references in the payment "
                   "return."))
-        move_line_model = self.env['account.move.line']
+        invoices = self.env['account.invoice']
+        move_line_obj = self.env['account.move.line']
         move = self.env['account.move'].create(
-            self._prepare_return_move_vals())
+            self._prepare_return_move_vals()
+        )
         total_amount = 0.0
-        all_move_lines = move_line_model.browse()
         for return_line in self.line_ids:
-            move_line2_vals = return_line._prepare_return_move_line_vals(move)
-            move_line2 = move_line_model.with_context(
-                check_move_validity=False).create(move_line2_vals)
-            total_amount += move_line2.debit
+            move_amount = self._get_move_amount(return_line)
+            move_line2 = self.env['account.move.line'].with_context(
+                check_move_validity=False).create({
+                    'name': move.ref,
+                    'debit': move_amount,
+                    'credit': 0.0,
+                    'account_id': return_line.move_line_ids[0].account_id.id,
+                    'move_id': move.id,
+                    'partner_id': return_line.partner_id.id,
+                    'journal_id': move.journal_id.id,
+                })
+            total_amount += move_amount
             for move_line in return_line.move_line_ids:
-                # move_line: credit on customer account (from payment move)
-                # returned_moves: debit on customer account (from invoice move)
                 returned_moves = move_line.matched_debit_ids.mapped(
                     'debit_move_id')
-                returned_moves._payment_returned(return_line)
-                all_move_lines |= move_line
+                invoices |= returned_moves.mapped('invoice_id')
                 move_line.remove_move_reconcile()
                 (move_line | move_line2).reconcile()
                 return_line.move_line_ids.mapped('matched_debit_ids').write(
                     {'origin_returned_move_ids': [(6, 0, returned_moves.ids)]})
             if return_line.expense_amount:
-                expense_lines_vals = return_line._prepare_expense_lines_vals(
-                    move)
-                move_line_model.with_context(check_move_validity=False).create(
-                    expense_lines_vals)
+                expense_lines_vals = []
+                expense_lines_vals.append({
+                    'name': move.ref,
+                    'move_id': move.id,
+                    'debit': 0.0,
+                    'credit': return_line.expense_amount,
+                    'partner_id': return_line.expense_partner_id.id,
+                    'account_id': (return_line.return_id.journal_id.
+                                   default_credit_account_id.id),
+                })
+                expense_lines_vals.append({
+                    'move_id': move.id,
+                    'debit': return_line.expense_amount,
+                    'name': move.ref,
+                    'credit': 0.0,
+                    'partner_id': return_line.expense_partner_id.id,
+                    'account_id': return_line.expense_account.id,
+                })
+                for expense_line_vals in expense_lines_vals:
+                    move_line_obj.with_context(
+                        check_move_validity=False).create(expense_line_vals)
             extra_lines_vals = return_line._prepare_extra_move_lines(move)
-            move_line_model.create(extra_lines_vals)
-        move_line_vals = self._prepare_move_line(move, total_amount)
-        # credit_move_line: credit on transfer or bank account
-        credit_move_line = move_line_model.create(move_line_vals)
-        # Reconcile (if option enabled)
-        self._auto_reconcile(
-            credit_move_line, all_move_lines, total_amount)
+            for extra_line_vals in extra_lines_vals:
+                move_line_obj.create(extra_line_vals)
+        move_line_obj.create({
+            'name': move.ref,
+            'debit': 0.0,
+            'credit': total_amount,
+            'account_id': self.journal_id.default_credit_account_id.id,
+            'move_id': move.id,
+            'journal_id': move.journal_id.id,
+        })
+        # Write directly because we returned payments just now
+        invoices.write(self._prepare_invoice_returned_vals())
         move.post()
         self.write({'state': 'done', 'move_id': move.id})
         return True
@@ -289,10 +237,6 @@ class PaymentReturnLine(models.Model):
         oldname="reason",
         string='Return reason',
     )
-    reason_additional_information = fields.Char(
-        string="Return reason (info)",
-        help="Additional information on return reason.",
-    )
     reference = fields.Char(
         string='Reference',
         help="Reference to match moves from related documents")
@@ -312,10 +256,10 @@ class PaymentReturnLine(models.Model):
         help="Returned amount. Can be different from the move amount",
         digits=dp.get_precision('Account'))
     expense_account = fields.Many2one(
-        comodel_name='account.account', string='Charges Account')
-    expense_amount = fields.Float(string='Charges Amount')
+        comodel_name='account.account', string='Expense Account')
+    expense_amount = fields.Float(string='Expense amount')
     expense_partner_id = fields.Many2one(
-        comodel_name="res.partner", string="Charges Partner",
+        comodel_name="res.partner", string="Expense partner",
         domain=[('supplier', '=', True)],
     )
 
@@ -415,45 +359,6 @@ class PaymentReturnLine(models.Model):
         lines2match.match_move()
         self._get_partner_from_move()
         self.filtered(lambda x: not x.amount)._compute_amount()
-
-    def _prepare_invoice_returned_vals(self):
-        return self.return_id._prepare_invoice_returned_vals()
-
-    @api.multi
-    def _prepare_return_move_line_vals(self, move):
-        self.ensure_one()
-        return {
-            'name': _('Return %s') % self.return_id.name,
-            'debit': self.return_id._get_move_amount(self),
-            'credit': 0.0,
-            'account_id': self.move_line_ids[0].account_id.id,
-            'partner_id': self.partner_id.id,
-            'journal_id': self.return_id.journal_id.id,
-            'move_id': move.id,
-        }
-
-    @api.multi
-    def _prepare_expense_lines_vals(self, move):
-        self.ensure_one()
-        return [
-            {
-                'name': move.ref,
-                'move_id': move.id,
-                'debit': 0.0,
-                'credit': self.expense_amount,
-                'partner_id': self.expense_partner_id.id,
-                'account_id': self.return_id.journal_id.
-                default_credit_account_id.id,
-            },
-            {
-                'move_id': move.id,
-                'debit': self.expense_amount,
-                'name': move.ref,
-                'credit': 0.0,
-                'partner_id': self.expense_partner_id.id,
-                'account_id': self.expense_account.id,
-            }
-        ]
 
     @api.multi
     def _prepare_extra_move_lines(self, move):

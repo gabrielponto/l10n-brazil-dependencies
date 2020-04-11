@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # © 2008 Zikzakmedia S.L. (http://zikzakmedia.com)
 #        Jordi Esteve <jesteve@zikzakmedia.com>
 # © 2011 Domsense srl (<http://www.domsense.com>)
@@ -7,8 +8,6 @@
 # © 2015 Tecnativa (http://www.tecnativa.com)
 # © 2016 Eficent Business and IT Consulting Services S.L.
 #        (http://www.eficent.com)
-# © 2018 Ozono Multimedia S.L.L.
-#        (http://www.ozonomultimedia.com)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
 from odoo import models, fields, api
@@ -27,7 +26,7 @@ class AccountMoveLine(models.Model):
                                       string='Payment Terms')
     stored_invoice_id = fields.Many2one(
         comodel_name='account.invoice', compute='_compute_invoice',
-        string='Stored Invoice', store=True)
+        string='Invoice', store=True)
 
     invoice_user_id = fields.Many2one(
         comodel_name='res.users', related='stored_invoice_id.user_id',

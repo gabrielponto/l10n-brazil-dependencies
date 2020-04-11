@@ -1,1 +1,2 @@
-from . import test_module
+# -*- coding: utf-8 -*-
+from . import test_classification

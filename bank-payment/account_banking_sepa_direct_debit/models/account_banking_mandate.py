@@ -1,6 +1,8 @@
-# Copyright 2013-2016 Akretion - Alexis de Lattre
-# Copyright 2014 Tecnativa - Pedro M. Baeza
-# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
+# -*- coding: utf-8 -*-
+# © 2013-2016 Akretion - Alexis de Lattre <alexis.delattre@akretion.com>
+# © 2014 Serv. Tecnol. Avanzados - Pedro M. Baeza
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+
 from odoo import models, fields, api, exceptions, _
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -18,11 +20,10 @@ class AccountBankingMandate(models.Model):
 
     format = fields.Selection(
         selection_add=[('sepa', 'Sepa Mandate')], default='sepa')
-    type = fields.Selection(
-        selection_add=[
-            ('recurrent', 'Recurrent'),
-            ('oneoff', 'One-Off')
-        ])
+    type = fields.Selection([('recurrent', 'Recurrent'),
+                             ('oneoff', 'One-Off')],
+                            string='Type of Mandate',
+                            track_visibility='onchange')
     recurrent_sequence_type = fields.Selection(
         [('first', 'First'),
          ('recurring', 'Recurring'),
@@ -35,7 +36,7 @@ class AccountBankingMandate(models.Model):
         ('B2B', 'Enterprise (B2B)')],
         string='Scheme', default="CORE", track_visibility='onchange')
     unique_mandate_reference = fields.Char(size=35)  # cf ISO 20022
-    display_name = fields.Char(compute='_compute_display_name2', store=True)
+    display_name = fields.Char(compute='compute_display_name', store=True)
 
     @api.multi
     @api.constrains('type', 'recurrent_sequence_type')
@@ -49,14 +50,15 @@ class AccountBankingMandate(models.Model):
 
     @api.multi
     @api.depends('unique_mandate_reference', 'recurrent_sequence_type')
-    def _compute_display_name2(self):
+    def compute_display_name(self):
         for mandate in self:
             if mandate.format == 'sepa':
-                mandate.display_name = '%s (%s)' % (
+                name = '%s (%s)' % (
                     mandate.unique_mandate_reference,
                     mandate.recurrent_sequence_type)
             else:
-                mandate.display_name = mandate.unique_mandate_reference
+                name = mandate.unique_mandate_reference
+            mandate.display_name = name
 
     @api.multi
     @api.onchange('partner_bank_id')
@@ -64,12 +66,10 @@ class AccountBankingMandate(models.Model):
         for mandate in self:
             super(AccountBankingMandate, self).mandate_partner_bank_change()
             res = {}
-            if (
-                mandate.state == 'valid' and
-                mandate.partner_bank_id and
-                mandate.type == 'recurrent' and
-                mandate.recurrent_sequence_type != 'first'
-            ):
+            if (mandate.state == 'valid' and
+                    mandate.partner_bank_id and
+                    mandate.type == 'recurrent' and
+                    mandate.recurrent_sequence_type != 'first'):
                 mandate.recurrent_sequence_type = 'first'
                 res['warning'] = {
                     'title': _('Mandate update'),
@@ -82,8 +82,8 @@ class AccountBankingMandate(models.Model):
     @api.model
     def _sdd_mandate_set_state_to_expired(self):
         logger.info('Searching for SDD Mandates that must be set to Expired')
-        expire_limit_date = datetime.today() + relativedelta(
-            months=-NUMBER_OF_UNUSED_MONTHS_BEFORE_EXPIRY)
+        expire_limit_date = datetime.today() + \
+            relativedelta(months=-NUMBER_OF_UNUSED_MONTHS_BEFORE_EXPIRY)
         expire_limit_date_str = expire_limit_date.strftime('%Y-%m-%d')
         expired_mandates = self.search(
             ['|',

@@ -1,23 +1,23 @@
+# -*- coding: utf-8 -*-
 # Copyright 2018 Camptocamp SA
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 
 
 class ResCurrency(models.Model):
     _inherit = "res.currency"
 
     monthly_rate = fields.Float(compute='_compute_current_monthly_rate',
-                                string='Current Monthly Rate', digits=(12, 6),
-                                help='The monthly rate of the currency to '
-                                     'the currency of rate 1.')
+                                string=u'Current Monthly Rate', digits=(12, 6),
+                                help=u'The monthly rate of the currency to '
+                                     u'the currency of rate 1.')
     monthly_rate_ids = fields.One2many('res.currency.rate.monthly',
-                                       'currency_id', string='Monthly rates')
+                                       'currency_id', string=u'Monthly rates')
 
     @api.multi
-    def _select_currencies(self, date=None):
-        if not date:
-            date = self.env.context.get('date') or fields.Date.today()
+    def _compute_current_monthly_rate(self):
+        date = self.env.context.get('date') or fields.Date.today()
         company_id = self.env.context.get('company_id') or self.env[
             'res.users']._get_company().id
         # the subquery selects the first rate before 'date' for the given
@@ -32,40 +32,28 @@ class ResCurrency(models.Model):
                                  LIMIT 1) AS rate
                    FROM res_currency c
                    WHERE c.id IN %s"""
-        self.env.cr.execute(query, (date, company_id, tuple(self.ids)))
-        return dict(self._cr.fetchall())
-
-    @api.multi
-    def _compute_current_monthly_rate(self):
-        currency_rates = self._select_currencies()
+        self._cr.execute(query, (date, company_id, tuple(self.ids)))
+        currency_rates = dict(self._cr.fetchall())
         for currency in self:
-                currency.monthly_rate = currency_rates.get(currency.id) or 1.0
-
-    @api.multi
-    def _get_current_monthly_rate(self, date):
-        # to be consistent with odoo currency behavior we add direct
-        # interaction with date parameter
-        self.ensure_one()
-        currency_rates = self._select_currencies(date)
-        return currency_rates.get(self.id) or 1.0
+            currency.monthly_rate = currency_rates.get(currency.id) or 1.0
 
     @api.model
-    def _get_conversion_rate(self, from_currency, to_currency, company, date):
+    def _get_conversion_rate(self, from_currency, to_currency):
         monthly = self.env.context.get('monthly_rate')
         if not monthly:
-            return super()._get_conversion_rate(from_currency, to_currency,
-                                                company, date)
+            return super(ResCurrency, self)._get_conversion_rate(
+                from_currency, to_currency
+            )
         from_currency = from_currency.with_env(self.env)
         to_currency = to_currency.with_env(self.env)
-        return (to_currency._get_current_monthly_rate(date)
-                / from_currency._get_current_monthly_rate(date))
+        return to_currency.monthly_rate / from_currency.monthly_rate
 
 
 class ResCurrencyRateMonthly(models.Model):
 
     _inherit = "res.currency.rate"
     _name = "res.currency.rate.monthly"
-    _description = "Currency monthly rate"
+    _description = u"Currency monthly rate"
 
     def _default_get_month(self):
         return fields.Date.from_string(
@@ -75,22 +63,21 @@ class ResCurrencyRateMonthly(models.Model):
         return fields.Date.from_string(
             fields.Date.context_today(self)).strftime('%Y')
 
-    name = fields.Date(compute='_compute_name', store=True, required=True,
-                       index=True)
+    name = fields.Date(compute='_compute_name', store=True, index=True)
     year = fields.Char(size=4, required=True,
                        default=lambda self: self._default_get_year())
-    month = fields.Selection([('01', 'January'),
-                              ('02', 'February'),
-                              ('03', 'March'),
-                              ('04', 'April'),
-                              ('05', 'May'),
-                              ('06', 'June'),
-                              ('07', 'July'),
-                              ('08', 'August'),
-                              ('09', 'September'),
-                              ('10', 'October'),
-                              ('11', 'November'),
-                              ('12', 'December')], required=True,
+    month = fields.Selection([('01', u'January'),
+                              ('02', u'February'),
+                              ('03', u'March'),
+                              ('04', u'April'),
+                              ('05', u'May'),
+                              ('06', u'June'),
+                              ('07', u'July'),
+                              ('08', u'August'),
+                              ('09', u'September'),
+                              ('10', u'October'),
+                              ('11', u'November'),
+                              ('12', u'December')], required=True,
                              default=lambda self: self._default_get_month())
 
     @api.depends('year', 'month')
@@ -104,7 +91,7 @@ class ResCurrencyRateMonthly(models.Model):
     # the second makes it stronger
     _sql_constraints = [
         ('unique_name_per_day', 'unique (name,currency_id,company_id)',
-         'Only one currency monthly rate per month allowed!'),
+         _(u'Only one currency monthly rate per month allowed!')),
         ('unique_year_month', 'unique (year,month,currency_id,company_id)',
-         'Only one currency monthly rate per month allowed!')
+         _(u'Only one currency monthly rate per month allowed!'))
     ]

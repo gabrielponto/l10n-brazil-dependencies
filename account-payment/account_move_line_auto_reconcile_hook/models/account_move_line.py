@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from odoo import api, models
 
 
@@ -6,15 +8,6 @@ class AccountMoveLine(models.Model):
 
     @api.model
     def update_amount_reconcile(
-            self, temp_amount_residual, temp_amount_residual_currency,
-            amount_reconcile, credit_move, debit_move):
-        return temp_amount_residual, temp_amount_residual_currency, \
-            amount_reconcile
-
-    @api.model
-    def _check_remove_debit_move(self, amount_reconcile, debit_move, field):
-        return amount_reconcile == debit_move[field]
-
-    @api.model
-    def _check_remove_credit_move(self, amount_reconcile, credit_move, field):
-        return amount_reconcile == -credit_move[field]
+            self, amount_reconcile, amount_reconcile_currency,
+            sm_credit_move, sm_debit_move):
+        return amount_reconcile, amount_reconcile_currency

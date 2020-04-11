@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright 2015 Pedro M. Baeza <pedro.baeza@tecnativa.com>
 # Copyright 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
 # Copyright 2017 David Vidal <david.vidal@tecnativa.com>
@@ -46,7 +47,6 @@ class TestPaymentReturn(SavepointCase):
                 {'name': 'Test income'}).id,
         })
         cls.partner = cls.env['res.partner'].create({'name': 'Test'})
-        cls.partner_1 = cls.env['res.partner'].create({'name': 'Test 1'})
         cls.invoice = cls.env['account.invoice'].create({
             'journal_id': cls.journal.id,
             'account_id': cls.account.id,
@@ -129,19 +129,6 @@ class TestPaymentReturn(SavepointCase):
         self.assertEqual(self.payment_return.state, 'draft')
         self.payment_return.unlink()
 
-    def test_payment_return_auto_reconcile(self):
-        self.assertEqual(self.invoice.state, 'paid')
-        self.payment_return.action_draft()
-        self.payment_return.line_ids[0].expense_amount = 20.0
-        self.payment_return.line_ids[0]._onchange_expense_amount()
-        self.payment_return.journal_id.return_auto_reconcile = True
-        self.payment_return.action_confirm()
-        self.assertEqual(self.payment_return.state, 'done')
-        self.assertEqual(self.invoice.state, 'open')
-        crdt_move_lines = self.payment_return.move_id.line_ids.filtered(
-            lambda l: l.credit)
-        self.assertTrue(crdt_move_lines.mapped('reconciled'))
-
     def test_payment_partial_return(self):
         self.payment_return.line_ids[0].amount = 500.0
         self.assertEqual(self.invoice.state, 'paid')
@@ -190,37 +177,6 @@ class TestPaymentReturn(SavepointCase):
         with self.assertRaises(ValidationError):
             self.payment_return.button_match()
 
-    def test_find_match_move_duplicate(self):
-        self.payment_move.name = 'test match move line 001'
-        invoice_1 = self.invoice.copy({'partner_id': self.partner_1.id})
-        invoice_1.action_invoice_open()
-        receivable_line = invoice_1.move_id.line_ids.filtered(
-            lambda x: x.account_id.internal_type == 'receivable')
-        payment_move = invoice_1.move_id.copy({
-            'journal_id': self.bank_journal.id
-        })
-        for move_line in payment_move.line_ids:
-            move_line.with_context(check_move_validity=False).write({
-                'debit': move_line.credit, 'credit': move_line.debit})
-        payment_line = payment_move.line_ids.filtered(
-            lambda x: x.account_id.internal_type == 'receivable')
-        # Reconcile both
-        (receivable_line | payment_line).reconcile()
-        payment_move.name = 'test match move line 001'
-        self.payment_return.write({
-            'line_ids': [
-                (5, 0),
-                (0, 0, {
-                    'partner_id': False,
-                    'move_line_ids': [(6, 0, [])],
-                    'amount': 0.0,
-                    'reference': self.payment_move.name,
-                }),
-            ]
-        })
-        with self.assertRaises(UserError):
-            self.payment_return.button_match()
-
     def test_duplicate_lines(self):
         line_vals = {'partner_id': self.partner.id,
                      'move_line_ids': [(6, 0, self.payment_line.ids)],
@@ -248,13 +204,3 @@ class TestPaymentReturn(SavepointCase):
         self.assertEqual(line.reason_id.name, 'Reason Test')
         line.reason_id = reason.name_search('Reason Test')[0]
         self.assertEqual(line.reason_id.code, 'RTEST')
-
-    def test_compute_total(self):
-        self.assertEqual(self.payment_return.total_amount, 500)
-        self.payment_return.write({
-            'line_ids': [(0, 0, {
-                'partner_id': self.partner.id,
-                'amount': 10.5,
-                'expense_account': self.account.id,
-                'expense_partner_id': self.partner.id})]})
-        self.assertEqual(self.payment_return.total_amount, 510.5)

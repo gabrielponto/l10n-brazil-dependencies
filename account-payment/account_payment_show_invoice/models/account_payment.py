@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright 2017 Eficent Business and IT Consulting Services, S.L.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
@@ -5,15 +6,20 @@ from odoo import api, fields, models
 
 
 class AccountPayment(models.Model):
-    _inherit = 'account.payment'
+    _inherit = "account.payment"
 
-    @api.multi
+    @api.one
     def _compute_invoice_vendor_references(self):
-        for payment in self:
-            ref = payment.invoice_ids.mapped(lambda x: x.reference or x.number)
-            ref.sort()
-            payment.invoice_vendor_references = ', '.join(ref)
+        references = ''
+        for invoice in self.invoice_ids:
+            if references:
+                references += ', '
+            if invoice.reference:
+                references += invoice.reference
+            else:
+                references += invoice.number
+        self.invoice_vendor_references = references
 
     invoice_vendor_references = fields.Char(
-        string='Ref Invoices',
+        string='Invoices',
         compute=_compute_invoice_vendor_references)

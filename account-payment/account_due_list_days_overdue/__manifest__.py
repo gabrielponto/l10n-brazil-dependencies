@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright 2016 Eficent Business and IT Consulting Services S.L.
 #   (<http://www.eficent.com>).
 # Copyright 2016 Therp BV (<http://therp.nl>).
@@ -5,7 +6,7 @@
 
 {
     'name': "Payments Due list days overdue",
-    'version': '12.0.1.0.0',
+    'version': '10.0.0.1.0',
     'category': 'Accounting',
     'author': 'Odoo Community Association (OCA), '
               'Eficent',

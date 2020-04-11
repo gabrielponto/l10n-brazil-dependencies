@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright 2013 Pedro M. Baeza <pedro.baeza@tecnativa.com>
 # Copyright 2014 Markus Schneider <markus.schneider@initos.com>
 # Copyright 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
@@ -27,19 +28,13 @@ class AccountInvoice(models.Model):
         (self - returned_invoices).filtered('returned_payment').write(
             {'returned_payment': False})
 
-    @api.multi
-    def _payment_returned(self, return_line):
-        vals = return_line._prepare_invoice_returned_vals()
-        if vals:
-            self.write(vals)
-
     @api.one
     @api.depends('payment_move_line_ids.amount_residual')
     def _get_payment_info_JSON(self):
         super(AccountInvoice, self)._get_payment_info_JSON()
         if not self.returned_payment:
             return True
-        if self.payments_widget != 'false':
+        if self.payments_widget != u'false':
             info = json.loads(self.payments_widget)
         else:
             info = {'title': _('Less Payment'),
@@ -58,7 +53,7 @@ class AccountInvoice(models.Model):
                 'currency': self.currency_id.symbol,
                 'digits': [69, self.currency_id.decimal_places],
                 'position': self.currency_id.position,
-                'date': fields.Date.to_string(payment.date),
+                'date': payment.date,
                 'payment_id': payment.id,
                 'move_id': payment.move_id.id,
                 'ref': payment.move_id.name,
@@ -70,7 +65,7 @@ class AccountInvoice(models.Model):
                 'currency': self.currency_id.symbol,
                 'digits': [69, self.currency_id.decimal_places],
                 'position': self.currency_id.position,
-                'date': fields.Date.to_string(payment_ret.date),
+                'date': payment_ret.date,
                 'payment_id': payment_ret.id,
                 'move_id': payment_ret.move_id.id,
                 'ref': payment_ret.move_id.name,

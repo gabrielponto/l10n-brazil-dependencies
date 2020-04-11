@@ -1,10 +1,10 @@
+# -*- coding: utf-8 -*-
 # © 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
 # © 2016 Pedro M. Baeza <pedro.baeza@tecnativa.com>
-# Copyright 2018 Tecnativa - Luis M. Ontalba
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import base64
-from io import BytesIO
+from StringIO import StringIO
 from zipfile import ZipFile, BadZipfile  # BadZipFile in Python >= 3.2
 
 from odoo import _, api, models, fields
@@ -76,7 +76,7 @@ class PaymentReturnImport(models.TransientModel):
         payment_return_raw_list = []
         files = [data_file]
         try:
-            with ZipFile(BytesIO(data_file), 'r') as archive:
+            with ZipFile(StringIO(data_file), 'r') as archive:
                 files = [
                     archive.read(filename) for filename in archive.namelist()
                     if not filename.endswith('/')
@@ -205,10 +205,7 @@ class PaymentReturnImport(models.TransientModel):
             if not bank_account_id and account_number:
                 raise UserError(
                     _('Can not find the account number %s.') % account_number)
-            payret_vals.update({
-                'imported_bank_account_id': bank_account_id,
-                'journal_id': self._get_journal(bank_account_id),
-            })
+            payret_vals['journal_id'] = self._get_journal(bank_account_id)
             # By now journal and account_number must be known
             if not payret_vals['journal_id']:
                 raise UserError(_('Can not determine journal for import.'))

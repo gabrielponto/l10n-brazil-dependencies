@@ -1,10 +1,11 @@
+# -*- coding: utf-8 -*-
 # Copyright 2016 Eficent Business and IT Consulting Services S.L.
 #   (<http://www.eficent.com>).
 # Copyright 2016 Therp BV (<http://therp.nl>).
 # Copyright 2016 Serpent Consulting Services Pvt. Ltd.
 #   (<http://www.serpentcs.com>).
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
-from odoo import exceptions, fields
+from odoo import exceptions, fields, workflow
 from odoo.tests.common import TransactionCase
 from datetime import date, timedelta
 
@@ -50,7 +51,8 @@ class TestAccountDueListDaysOverdue(TransactionCase):
             'account_id': self.sales_account.id,
             'invoice_id': self.invoice.id,
             'name': 'product that cost 100'})
-        self.invoice.action_invoice_open()
+        workflow.trg_validate(self.uid, 'account.invoice', self.invoice.id,
+                              'invoice_open', self.cr)
 
     def _create_account_type(self):
         # Create receivable and sales test account
@@ -67,9 +69,6 @@ class TestAccountDueListDaysOverdue(TransactionCase):
             'user_type_id': self.revenue_user_type.id,
             'company_id': self.company.id,
         })
-
-    def test_workflow_open(self):
-        self.assertEqual(self.invoice.state, 'open')
 
     def test_due_days(self):
         move = self.invoice.move_id

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright 2018 Camptocamp SA
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
@@ -9,9 +10,7 @@ class TestCurrencyMonthlyRate(SavepointCase):
 
     @classmethod
     def setUpClass(cls):
-        super().setUpClass()
-        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
-        cls.company = cls.env.ref('base.main_company')
+        super(TestCurrencyMonthlyRate, cls).setUpClass()
 
         cls.usd = cls.env.ref('base.USD')
         cls.eur = cls.env.ref('base.EUR')
@@ -30,8 +29,7 @@ class TestCurrencyMonthlyRate(SavepointCase):
         for r in monthly_rates_to_create:
             r.update({
                 'year': cls.year,
-                'currency_id': cls.usd.id,
-                'company_id': cls.company.id,
+                'currency_id': cls.usd.id
             })
             monthly_rate.create(r)
 
@@ -54,19 +52,19 @@ class TestCurrencyMonthlyRate(SavepointCase):
         cls.feb_2 = '%s-02-02' % cls.year
         cls.feb_12 = '%s-02-12' % cls.year
 
-    def compute_eur_usd(self, amount, date, monthly):
+    def compute_eur_usd(self, amount, date_, monthly):
         self.usd.invalidate_cache()
         self.eur.invalidate_cache()
         if monthly:
             return self.eur.with_context(
-                monthly_rate=True
-            )._convert(amount, self.usd, self.company, date)
+                date=date_, monthly_rate=True
+            ).compute(amount, self.usd)
         else:
             return self.eur.with_context(
-            )._convert(amount, self.usd, self.company, date)
+                date=date_
+            ).compute(amount, self.usd)
 
     def test_monthly_compute(self):
-
         self.assertEqual(self.compute_eur_usd(10, self.jan_2, True), 12)
         self.assertEqual(self.compute_eur_usd(10, self.jan_12, True), 12)
         self.assertEqual(self.compute_eur_usd(10, self.jan_31, True), 12)
@@ -88,16 +86,11 @@ class TestCurrencyMonthlyRate(SavepointCase):
 
     def test_get_conversion_rate(self):
         currency_model = self.env['res.currency']
-        company = self.env.ref('base.main_company')
         eur_usd_jan_2 = currency_model.with_context(
-            date=self.jan_2)._get_conversion_rate(
-            self.eur, self.usd, company,
-            self.jan_2,
-        )
+            date=self.jan_2)._get_conversion_rate(self.eur, self.usd)
         self.assertEqual(eur_usd_jan_2, 1.15)
 
         monthly_eur_usd_jan_2 = currency_model.with_context(
-            date=self.jan_2, monthly_rate=True)._get_conversion_rate(
-            self.eur, self.usd, company, self.jan_2,
-        )
+            date=self.jan_2, monthly_rate=True)._get_conversion_rate(self.eur,
+                                                                     self.usd)
         self.assertEqual(monthly_eur_usd_jan_2, 1.2)
