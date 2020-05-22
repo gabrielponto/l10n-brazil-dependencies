@@ -1,0 +1,11 @@
+.git
+.github
+*.pyc
+__pycache__
+.coveragerc
+.editorconfig
+.gitignore
+.travis.yml
+Dockerfile
+LICENSE
+README.md
