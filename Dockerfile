@@ -1,4 +1,4 @@
-FROM oliveiradigital/odoo-br-base:10.0
+FROM oliveiradigital/odoo-br-base:8.0
 
 LABEL maintainer "Gabriel Oliveira <admin@oliveiradigital.com.br>"
 

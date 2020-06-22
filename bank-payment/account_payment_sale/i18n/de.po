@@ -5,12 +5,12 @@
 # Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: bank-payment (10.0)\n"
+"Project-Id-Version: bank-payment (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-08 01:38+0000\n"
-"PO-Revision-Date: 2017-12-07 19:29+0000\n"
-"Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
-"Language-Team: German (http://www.transifex.com/oca/OCA-bank-payment-10-0/"
+"POT-Creation-Date: 2016-12-10 17:00+0000\n"
+"PO-Revision-Date: 2016-04-06 00:16+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: German (http://www.transifex.com/oca/OCA-bank-payment-8-0/"
 "language/de/)\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -19,21 +19,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_payment_sale
-#: model:ir.ui.view,arch_db:account_payment_sale.report_sale_payment_mode
-msgid "<strong>Payment Mode:</strong>"
-msgstr "<strong>Zahlungsmethode:</strong>"
-
-#. module: account_payment_sale
-#: model:ir.model.fields,field_description:account_payment_sale.field_sale_order_payment_mode_id
+#: field:sale.order,payment_mode_id:0
 msgid "Payment Mode"
-msgstr "Zahlungsmodus"
-
-#. module: account_payment_sale
-#: model:ir.model,name:account_payment_sale.model_sale_advance_payment_inv
-msgid "Sales Advance Payment Invoice"
-msgstr "Verkaufsanzahlungsrechnung"
+msgstr "Zahlweise"
 
 #. module: account_payment_sale
 #: model:ir.model,name:account_payment_sale.model_sale_order
 msgid "Sales Order"
-msgstr "Kundenauftrag"
+msgstr "Verkaufsauftrag"

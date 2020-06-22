@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  © 2013-2016 Akretion (Alexis de Lattre <alexis.delattre@akretion.com>)
-  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+  Copyright (C) 2013 Akretion (http://www.akretion.com)
+  @author: Alexis de Lattre <alexis.delattre@akretion.com>
+  The licence is in the file __openerp__.py
 -->
-<odoo>
+<openerp>
+<data>
 
 
 <record id="view_mandate_form" model="ir.ui.view">
@@ -31,7 +33,6 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="format" string="Format"/>
                     <field name="partner_bank_id"
-                        options="{'create_name_field': 'acc_number'}"
                         invisible="context.get('mandate_bank_partner_view')" />
                     <field name="partner_id"
                         invisible="context.get('mandate_bank_partner_view')"
@@ -80,7 +81,6 @@
             <filter name="cancel" string="Cancelled" domain="[('state', '=', 'cancel')]" />
             <filter name="expired" string="Expired" domain="[('state', '=', 'expired')]" />
             <group string="Group By" name="groupby">
-                <filter name="state_groupby" string="State" context="{'group_by': 'state'}"/>
                 <filter name="signature_date_groupby" string="Signature Date" context="{'group_by': 'signature_date'}"/>
             </group>
         </search>
@@ -101,10 +101,33 @@
 </record>
 
 <menuitem id="mandate_menu"
-    parent="account_payment_order.payment_root"
+    parent="account_payment.menu_main_payment"
     action="mandate_action"
-    sequence="30"
+    sequence="20"
     />
 
+<!-- notifications in the chatter -->
+<record id="mandate_valid" model="mail.message.subtype">
+    <field name="name">Mandate Validated</field>
+    <field name="res_model">account.banking.mandate</field>
+    <field name="default" eval="False"/>
+    <field name="description">Banking Mandate Validated</field>
+</record>
 
-</odoo>
+<record id="mandate_expired" model="mail.message.subtype">
+    <field name="name">Mandate Expired</field>
+    <field name="res_model">account.banking.mandate</field>
+    <field name="default" eval="False"/>
+    <field name="description">Banking Mandate has Expired</field>
+</record>
+
+<record id="mandate_cancel" model="mail.message.subtype">
+    <field name="name">Mandate Cancelled</field>
+    <field name="res_model">account.banking.mandate</field>
+    <field name="default" eval="False"/>
+    <field name="description">Banking Mandate Cancelled</field>
+</record>
+
+
+</data>
+</openerp>

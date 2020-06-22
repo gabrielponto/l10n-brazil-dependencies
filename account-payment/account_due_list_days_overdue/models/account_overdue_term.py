@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-# Copyright 2016 Eficent Business and IT Consulting Services S.L.
-#   (<http://www.eficent.com>).
-# Copyright 2016 Therp BV (<http://therp.nl>).
+# © 2016 Eficent Business and IT Consulting Services S.L. (
+# <http://www.eficent.com>).
+# © 2016 Therp BV (<http://therp.nl>).
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
-
-from odoo import api, fields, models, _
-from odoo.modules.registry import RegistryManager
-from odoo import exceptions
+from openerp import api, fields, models, _
+from openerp.modules.registry import RegistryManager
+from openerp import exceptions
 
 
 class AccountDaysOverdue(models.Model):
@@ -28,7 +27,7 @@ class AccountDaysOverdue(models.Model):
     @api.model
     def create(self, vals):
         res = super(AccountDaysOverdue, self).create(vals)
-        if self.env['account.move.line']._register_hook():
+        if self.pool['account.move.line']._register_hook(self.env.cr):
             RegistryManager.signal_registry_change(
                 self.env.cr.dbname)
         return res
@@ -36,7 +35,7 @@ class AccountDaysOverdue(models.Model):
     @api.multi
     def write(self, vals):
         res = super(AccountDaysOverdue, self).write(vals)
-        if self.env['account.move.line']._register_hook():
+        if self.pool['account.move.line']._register_hook(self.env.cr):
             RegistryManager.signal_registry_change(
                 self.env.cr.dbname)
         return res

@@ -3,16 +3,15 @@
 # * account_payment_partner
 #
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# OCA Transbot <transbot@odoo-community.org>, 2016
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: bank-payment (10.0)\n"
+"Project-Id-Version: bank-payment (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-01 14:55+0000\n"
-"PO-Revision-Date: 2016-10-19 23:47+0000\n"
+"POT-Creation-Date: 2017-03-28 01:27+0000\n"
+"PO-Revision-Date: 2017-04-25 10:41+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
-"Language-Team: Dutch (http://www.transifex.com/oca/OCA-bank-payment-10-0/"
+"Language-Team: Dutch (http://www.transifex.com/oca/OCA-bank-payment-8-0/"
 "language/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -21,59 +20,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_payment_partner
-#: model:ir.ui.view,arch_db:account_payment_partner.account_payment_mode_form
-msgid "# of chars"
+#: selection:payment.mode,default_payment_mode:0
+#: selection:payment.order.create,payment_mode:0
+msgid "Any"
 msgstr ""
 
 #. module: account_payment_partner
-#: model:ir.model.fields,field_description:account_payment_partner.field_account_payment_mode_show_bank_account_chars
-msgid "# of digits for customer bank account"
+#: view:website:account.report_invoice_document
+msgid "Bank Account:"
 msgstr ""
 
 #. module: account_payment_partner
-#: model:ir.ui.view,arch_db:account_payment_partner.report_invoice_payment_mode
-msgid "<strong>Bank Account:</strong>"
-msgstr "<strong>Bankrekening:</strong>"
-
-#. module: account_payment_partner
-#: model:ir.ui.view,arch_db:account_payment_partner.report_invoice_payment_mode
-msgid "<strong>Payment Mode:</strong>"
-msgstr "<strong>Betaalmode:</strong>"
-
-#. module: account_payment_partner
-#: model:ir.model.fields,help:account_payment_partner.field_account_invoice_bank_account_required
-msgid ""
-"Activate this option if this payment method requires you to know the bank "
-"account number of your customer or supplier."
-msgstr ""
-"Activeer deze optie als de betaalwijze verwacht dat u het bankrekeningnummer "
-"van uw klant of leverancier kent."
-
-#. module: account_payment_partner
-#: model:ir.model.fields,field_description:account_payment_partner.field_account_invoice_bank_account_required
-msgid "Bank Account Required"
-msgstr "Bankrekening verplicht"
-
-#. module: account_payment_partner
-#: model:ir.model.fields,field_description:account_payment_partner.field_account_payment_mode_show_bank_account_from_journal
-msgid "Bank account from journals"
-msgstr ""
-
-#. module: account_payment_partner
-#: model:ir.model.fields,field_description:account_payment_partner.field_res_partner_customer_payment_mode_id
-#: model:ir.model.fields,field_description:account_payment_partner.field_res_users_customer_payment_mode_id
+#: field:res.partner,customer_payment_mode:0
 msgid "Customer Payment Mode"
 msgstr "Betaalwijze klant"
-
-#. module: account_payment_partner
-#: selection:account.payment.mode,show_bank_account:0
-msgid "First n chars"
-msgstr ""
-
-#. module: account_payment_partner
-#: selection:account.payment.mode,show_bank_account:0
-msgid "Full"
-msgstr ""
 
 #. module: account_payment_partner
 #: model:ir.model,name:account_payment_partner.model_account_invoice
@@ -81,72 +41,60 @@ msgid "Invoice"
 msgstr "Factuur"
 
 #. module: account_payment_partner
-#: model:ir.model,name:account_payment_partner.model_account_move_line
-msgid "Journal Item"
-msgstr "Boekingsregel"
-
-#. module: account_payment_partner
-#: selection:account.payment.mode,show_bank_account:0
-msgid "Last n chars"
-msgstr ""
-
-#. module: account_payment_partner
-#: selection:account.payment.mode,show_bank_account:0
-msgid "No"
-msgstr ""
-
-#. module: account_payment_partner
 #: model:ir.model,name:account_payment_partner.model_res_partner
 msgid "Partner"
 msgstr "Relatie"
 
 #. module: account_payment_partner
-#: model:ir.model.fields,field_description:account_payment_partner.field_account_invoice_payment_mode_id
-#: model:ir.model.fields,field_description:account_payment_partner.field_account_move_line_payment_mode_id
-#: model:ir.ui.view,arch_db:account_payment_partner.view_account_invoice_filter
+#: field:account.invoice,payment_mode_id:0
+#: model:ir.model,name:account_payment_partner.model_payment_mode
 msgid "Payment Mode"
 msgstr "Betaalwijze"
 
 #. module: account_payment_partner
-#: model:ir.model,name:account_payment_partner.model_account_payment_mode
-#, fuzzy
-msgid "Payment Modes"
-msgstr "Betaalwijze"
+#: field:payment.mode,default_payment_mode:0
+#: field:payment.order.create,payment_mode:0
+msgid "Payment Mode on Invoice"
+msgstr ""
 
 #. module: account_payment_partner
-#: model:ir.ui.view,arch_db:account_payment_partner.view_move_line_form
-msgid "Payments"
-msgstr "Betalingen"
+#: view:website:account.report_invoice_document
+msgid "Payment Mode:"
+msgstr ""
 
 #. module: account_payment_partner
-#: model:ir.model.fields,help:account_payment_partner.field_res_partner_customer_payment_mode_id
-#: model:ir.model.fields,help:account_payment_partner.field_res_users_customer_payment_mode_id
+#: view:account.invoice:account_payment_partner.invoice_filter
+msgid "Payment mode"
+msgstr ""
+
+#. module: account_payment_partner
+#: selection:payment.mode,default_payment_mode:0
+#: selection:payment.order.create,payment_mode:0
+msgid "Same"
+msgstr ""
+
+#. module: account_payment_partner
+#: selection:payment.mode,default_payment_mode:0
+#: selection:payment.order.create,payment_mode:0
+msgid "Same or empty"
+msgstr ""
+
+#. module: account_payment_partner
+#: help:res.partner,customer_payment_mode:0
 msgid "Select the default payment mode for this customer."
 msgstr "Selecteer de standaard betaalwijze voor deze klant."
 
 #. module: account_payment_partner
-#: model:ir.model.fields,help:account_payment_partner.field_res_partner_supplier_payment_mode_id
-#: model:ir.model.fields,help:account_payment_partner.field_res_users_supplier_payment_mode_id
+#: help:res.partner,supplier_payment_mode:0
 msgid "Select the default payment mode for this supplier."
 msgstr "Selecteer de standaard betaalwijze voor deze leverancier."
 
 #. module: account_payment_partner
-#: model:ir.model.fields,field_description:account_payment_partner.field_account_payment_mode_show_bank_account
-msgid "Show bank account"
-msgstr ""
+#: view:account.invoice:account_payment_partner.invoice_filter
+msgid "Status"
+msgstr "Status"
 
 #. module: account_payment_partner
-#: model:ir.ui.view,arch_db:account_payment_partner.account_payment_mode_form
-msgid "Show bank account in invoice report"
-msgstr ""
-
-#. module: account_payment_partner
-#: model:ir.model.fields,help:account_payment_partner.field_account_payment_mode_show_bank_account
-msgid "Show in invoices partial or full bank account number"
-msgstr ""
-
-#. module: account_payment_partner
-#: model:ir.model.fields,field_description:account_payment_partner.field_res_partner_supplier_payment_mode_id
-#: model:ir.model.fields,field_description:account_payment_partner.field_res_users_supplier_payment_mode_id
+#: field:res.partner,supplier_payment_mode:0
 msgid "Supplier Payment Mode"
 msgstr "Betaalwijze leverancier"

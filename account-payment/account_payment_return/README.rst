@@ -24,26 +24,30 @@ Another option to fill info is setting references and click match button to
 find matches with invoices, move lines or moves. This functionality is extended
 by other modules as *account_payment_return_import_sepa_pain*
 
-It's possible to add a commission amount on each line.
-
 Next, press button "Confirm" to create a new move line that removes the
 balance from the bank journal and reconcile items together to show payment
 history through it.
 
-After confirmation you can access from the payment form view to the move
-created.
-
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
    :alt: Try me on Runbot
-   :target: https://runbot.odoo-community.org/runbot/96/10.0
+   :target: https://runbot.odoo-community.org/runbot/96/8.0
+
+Known issues / Roadmap
+======================
+
+* Add a button to see the created move.
+* Allow to add a commission amount on each line.
 
 Bug Tracker
 ===========
 
-Bugs are tracked on `GitHub Issues
-<https://github.com/OCA/account-payment/issues>`_. In case of trouble, please
-check there if your issue has already been reported. If you spotted it first,
-help us smash it by providing detailed and welcomed feedback.
+Bugs are tracked on `GitHub Issues <https://github.com/OCA/
+account-payment/issues>`_.
+In case of trouble, please check there if your issue has already been reported.
+If you spotted it first, help us smashing it by providing a detailed and welcomed feedback `here <https://github.com/OCA/
+account-payment/issues/new?body=module:%20
+account_payment_return%0Aversion:%20
+8.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Credits
 =======
@@ -56,15 +60,13 @@ Contributors
 * Markus Schneider <markus.schneider@initos.com>
 * Sergio Teruel <sergio.teruel@tecnativa.com>
 * Carlos Dauden <carlos.dauden@tecnativa.com>
-* David Vidal <david.vidal@tecnativa.com>
-* Luis M. Ontalba <luis.martinez@tecnativa.com>
 
 Maintainer
 ----------
 
-.. image:: https://odoo-community.org/logo.png
+.. image:: http://odoo-community.org/logo.png
    :alt: Odoo Community Association
-   :target: https://odoo-community.org
+   :target: http://odoo-community.org
 
 This module is maintained by the OCA.
 
@@ -72,4 +74,4 @@ OCA, or the Odoo Community Association, is a nonprofit organization whose
 mission is to support the collaborative development of Odoo features and
 promote its widespread use.
 
-To contribute to this module, please visit https://odoo-community.org.
+To contribute to this module, please visit http://odoo-community.org.

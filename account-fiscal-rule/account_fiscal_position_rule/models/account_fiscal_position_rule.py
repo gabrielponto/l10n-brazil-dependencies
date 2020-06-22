@@ -8,101 +8,56 @@
 
 import time
 
-from odoo import models, fields, api
+from openerp import models, fields, api
 
 
 class AccountFiscalPositionRule(models.Model):
     _name = 'account.fiscal.position.rule'
+    _description = 'Account Fiscal Position Rule'
     _order = 'sequence'
 
-    name = fields.Char(
-        string='Name',
-        required=True
-    )
-    description = fields.Char(
-        string='Description'
-    )
-    from_country = fields.Many2one(
-        comodel_name='res.country',
-        string='Country From'
-    )
+    name = fields.Char('Name', required=True)
+    description = fields.Char('Description')
+    from_country = fields.Many2one('res.country', 'Country From')
     from_state = fields.Many2one(
-        comodel_name='res.country.state',
-        string='State From',
-        domain="[('country_id','=',from_country)]"
-    )
-    to_invoice_country = fields.Many2one(
-        comodel_name='res.country',
-        string='Invoice Country'
-    )
+        'res.country.state', 'State From',
+        domain="[('country_id','=',from_country)]")
+    to_invoice_country = fields.Many2one('res.country', 'Invoice Country')
     to_invoice_state = fields.Many2one(
-        comodel_name='res.country.state',
-        string='Invoice State',
-        domain="[('country_id','=',to_invoice_country)]"
-    )
-    to_shipping_country = fields.Many2one(
-        comodel_name='res.country',
-        string='Destination Country'
-    )
+        'res.country.state', 'Invoice State',
+        domain="[('country_id','=',to_invoice_country)]")
+    to_shipping_country = fields.Many2one('res.country', 'Destination Country')
     to_shipping_state = fields.Many2one(
-        comodel_name='res.country.state',
-        string='Destination State',
-        domain="[('country_id','=',to_shipping_country)]"
-    )
+        'res.country.state', 'Destination State',
+        domain="[('country_id','=',to_shipping_country)]")
     company_id = fields.Many2one(
-        comodel_name='res.company',
-        sting='Company',
-        required=True,
-        index=True
-    )
+        'res.company', 'Company', required=True, select=True)
     fiscal_position_id = fields.Many2one(
-        comodel_name='account.fiscal.position',
-        string='Fiscal Position',
-        required=True,
-        domain="[('company_id','=',company_id)]",
-        index=True
-    )
-    use_sale = fields.Boolean(
-        string='Use in sales order'
-    )
-    use_invoice = fields.Boolean(
-        string='Use in Invoices'
-    )
-    use_purchase = fields.Boolean(
-        string='Use in Purchases'
-    )
-    use_picking = fields.Boolean(
-        string='Use in Picking'
-    )
+        'account.fiscal.position', 'Fiscal Position', required=True,
+        domain="[('company_id','=',company_id)]", select=True)
+    use_sale = fields.Boolean('Use in sales order')
+    use_invoice = fields.Boolean('Use in Invoices')
+    use_purchase = fields.Boolean('Use in Purchases')
+    use_picking = fields.Boolean('Use in Picking')
     date_start = fields.Date(
-        string='Start Date',
-        help="Starting date for this rule to be valid."
-    )
+        'Start Date', help="Starting date for this rule to be valid.")
     date_end = fields.Date(
-        string='End Date',
-        help="Ending date for this rule to be valid."
-    )
+        'End Date', help="Ending date for this rule to be valid.")
     sequence = fields.Integer(
-        string='Priority',
-        required=True,
-        default=10,
-        help='The lowest number will be applied.'
-    )
-    vat_rule = fields.Selection(
-        selection=[('with', 'With VAT number'),
-                   ('both', 'With or Without VAT number'),
-                   ('without', 'Without VAT number')],
-        string="VAT Rule",
+        'Priority', required=True, default=10,
+        help='The lowest number will be applied.')
+    vat_rule = fields.Selection([
+        ('with', 'With VAT number'),
+        ('both', 'With or Without VAT number'),
+        ('without', 'Without VAT number')], "VAT Rule",
         help=('Choose if the customer need to have the'
-              ' field VAT fill for using this fiscal position')
-    )
+              ' field VAT fill for using this fiscal position'))
 
     @api.onchange('company_id')
     def onchange_company(self):
         self.from_country = self.company_id.country_id
         self.from_state = self.company_id.state_id
 
-    @api.multi
     def _map_domain(self, partner, addrs, company, **kwargs):
         from_country = company.partner_id.country_id.id
         from_state = company.partner_id.state_id.id
@@ -144,50 +99,54 @@ class AccountFiscalPositionRule(models.Model):
 
         return domain
 
-    @api.multi
     def fiscal_position_map(self, **kwargs):
-        result = self.env['account.fiscal.position.rule']
+        result = {'fiscal_position': False}
 
-        obj_partner_id = kwargs.get('partner_id')
-        obj_company_id = kwargs.get('company_id')
-        obj_partner_invoice_id = kwargs.get('partner_invoice_id')
-        obj_partner_shipping_id = kwargs.get('partner_shipping_id')
+        partner_id = kwargs.get('partner_id')
+        company_id = kwargs.get('company_id')
+        partner_invoice_id = kwargs.get('partner_invoice_id')
+        partner_shipping_id = kwargs.get('partner_shipping_id')
 
-        if obj_partner_id and obj_company_id:
+        if not partner_id or not company_id:
+            return result
 
-            # Case 1: Partner Specific Fiscal Position
-            if obj_partner_id.property_account_position_id:
-                result = obj_partner_id.property_account_position_id
-                return result
+        partner = self.env['res.partner'].browse(partner_id)
+        company = self.env['res.company'].browse(company_id)
 
-            # Case 2: Rule based determination
-            addrs = {}
-            if obj_partner_invoice_id:
-                addrs['invoice'] = obj_partner_invoice_id
+        # Case 1: Partner Specific Fiscal Position
+        if partner.property_account_position:
+            result['fiscal_position'] = partner.property_account_position.id
+            return result
 
-            # In picking case the invoice_id can be empty but we need a
-            # value I only see this case, maybe we can move this code in
-            # fiscal_stock_rule
-            else:
-                partner_addr = obj_partner_id.address_get(['invoice'])
-                if partner_addr['invoice']:
-                    addr_id = partner_addr['invoice']
-                    addrs['invoice'] = self.env['res.partner'].browse(addr_id)
-            if obj_partner_shipping_id:
-                addrs['shipping'] = obj_partner_shipping_id
+        # Case 2: Rule based determination
+        addrs = {}
+        if partner_invoice_id:
+            addrs['invoice'] = self.env['res.partner'].browse(
+                partner_invoice_id)
 
-            # Case 3: Rule based determination
-            domain = self._map_domain(
-                obj_partner_id, addrs, obj_company_id, **kwargs)
-            fsc_pos = self.search(domain, limit=1)
-            if fsc_pos:
-                result = fsc_pos[0].fiscal_position_id
+        # In picking case the invoice_id can be empty but we need a
+        # value I only see this case, maybe we can move this code in
+        # fiscal_stock_rule
+        else:
+            partner_addr = partner.address_get(['invoice'])
+            if partner_addr['invoice']:
+                addr_id = partner_addr['invoice']
+                addrs['invoice'] = self.env['res.partner'].browse(addr_id)
+        if partner_shipping_id:
+            addrs['shipping'] = self.env['res.partner'].browse(
+                partner_shipping_id)
+
+        # Case 3: Rule based determination
+        domain = self._map_domain(partner, addrs, company, **kwargs)
+        fsc_pos = self.search(domain)
+        if fsc_pos:
+            result['fiscal_position'] = fsc_pos[0].fiscal_position_id.id
 
         return result
 
-    @api.multi
-    def apply_fiscal_mapping(self, **kwargs):
-        return self.fiscal_position_map(**kwargs)
+    def apply_fiscal_mapping(self, result, **kwargs):
+        result['value'].update(self.fiscal_position_map(**kwargs))
+        return result
 
 
 class AccountFiscalPositionRuleTemplate(models.Model):
@@ -195,80 +154,40 @@ class AccountFiscalPositionRuleTemplate(models.Model):
     _description = 'Account Fiscal Position Rule Template'
     _order = 'sequence'
 
-    name = fields.Char(
-        string='Name',
-        required=True
-    )
-    description = fields.Char(
-        string='Description'
-    )
-    from_country = fields.Many2one(
-        comodel_name='res.country',
-        string='Country Form'
-    )
+    name = fields.Char('Name', required=True)
+    description = fields.Char('Description')
+    from_country = fields.Many2one('res.country', 'Country Form')
     from_state = fields.Many2one(
-        comodel_name='res.country.state',
-        string='State From',
-        domain="[('country_id','=',from_country)]"
-    )
-    to_invoice_country = fields.Many2one(
-        comodel_name='res.country',
-        string='Country To'
-    )
+        'res.country.state', 'State From',
+        domain="[('country_id','=',from_country)]")
+    to_invoice_country = fields.Many2one('res.country', 'Country To')
     to_invoice_state = fields.Many2one(
-        comodel_name='res.country.state',
-        string='State To',
-        domain="[('country_id','=',to_invoice_country)]"
-    )
+        'res.country.state', 'State To',
+        domain="[('country_id','=',to_invoice_country)]")
     to_shipping_country = fields.Many2one(
-        comodel_name='res.country',
-        string='Destination Country'
-    )
+        'res.country', 'Destination Country')
     to_shipping_state = fields.Many2one(
-        comodel_name='res.country.state',
-        string='Destination State',
-        domain="[('country_id','=',to_shipping_country)]"
-    )
+        'res.country.state', 'Destination State',
+        domain="[('country_id','=',to_shipping_country)]")
     fiscal_position_id = fields.Many2one(
-        comodel_name='account.fiscal.position.template',
-        string='Fiscal Position',
-        required=True
-    )
-    use_sale = fields.Boolean(
-        string='Use in sales order'
-    )
-    use_invoice = fields.Boolean(
-        string='Use in Invoices'
-    )
-    use_purchase = fields.Boolean(
-        string='Use in Purchases'
-    )
-    use_picking = fields.Boolean(
-        string='Use in Picking'
-    )
+        'account.fiscal.position.template', 'Fiscal Position', required=True)
+    use_sale = fields.Boolean('Use in sales order')
+    use_invoice = fields.Boolean('Use in Invoices')
+    use_purchase = fields.Boolean('Use in Purchases')
+    use_picking = fields.Boolean('Use in Picking')
     date_start = fields.Date(
-        string='Start Date',
-        help="Starting date for this rule to be valid."
-    )
+        'Start Date', help="Starting date for this rule to be valid.")
     date_end = fields.Date(
-        string='End Date',
-        help="Ending date for this rule to be valid."
-    )
+        'End Date', help="Ending date for this rule to be valid.")
     sequence = fields.Integer(
-        string='Priority',
-        required=True,
-        default=10,
-        help='The lowest number will be applied.'
-    )
-    vat_rule = fields.Selection(
-        selection=[('with', 'With VAT number'),
-                   ('both', 'With or Without VAT number'),
-                   ('without', 'Without VAT number')],
-        string="VAT Rule",
-        default='both',
+        'Priority', required=True, default=10,
+        help='The lowest number will be applied.')
+    vat_rule = fields.Selection([
+        ('with', 'With VAT number'),
+        ('both', 'With or Without VAT number'),
+        ('without', 'Without VAT number')], "VAT Rule", default='both',
         help=('Choose if the customer need to have the'
-              ' field VAT fill for using this fiscal position')
-    )
+              ' field VAT fill for using this fiscal position'))
 
 
 class WizardAccountFiscalPositionRule(models.TransientModel):
@@ -276,34 +195,31 @@ class WizardAccountFiscalPositionRule(models.TransientModel):
     _description = 'Account Fiscal Position Rule Wizard'
 
     company_id = fields.Many2one(
-        comodel_name='res.company',
-        string='Company',
-        required=True,
+        'res.company', 'Company', required=True,
         default=lambda self: self.env['res.company']._company_default_get(
             'wizard.account.fiscal.position.rule'))
 
-    @api.multi
-    def _template_vals(self, template, company_id, fiscal_position_id):
-        return {
-            'name': template.name,
-            'description': template.description,
-            'from_country': template.from_country.id,
-            'from_state': template.from_state.id,
-            'to_invoice_country': template.to_invoice_country.id,
-            'to_invoice_state': template.to_invoice_state.id,
-            'to_shipping_country': template.to_shipping_country.id,
-            'to_shipping_state': template.to_shipping_state.id,
-            'company_id': company_id,
-            'fiscal_position_id': fiscal_position_id,
-            'use_sale': template.use_sale,
-            'use_invoice': template.use_invoice,
-            'use_purchase': template.use_purchase,
-            'use_picking': template.use_picking,
-            'date_start': template.date_start,
-            'date_end': template.date_end,
-            'sequence': template.sequence,
-            'vat_rule': template.vat_rule,
-        }
+    def _template_vals(self, cr, uid, template, company_id,
+                       fiscal_position_id, context=None):
+        return {'name': template.name,
+                'description': template.description,
+                'from_country': template.from_country.id,
+                'from_state': template.from_state.id,
+                'to_invoice_country': template.to_invoice_country.id,
+                'to_invoice_state': template.to_invoice_state.id,
+                'to_shipping_country': template.to_shipping_country.id,
+                'to_shipping_state': template.to_shipping_state.id,
+                'company_id': company_id,
+                'fiscal_position_id': fiscal_position_id,
+                'use_sale': template.use_sale,
+                'use_invoice': template.use_invoice,
+                'use_purchase': template.use_purchase,
+                'use_picking': template.use_picking,
+                'date_start': template.date_start,
+                'date_end': template.date_end,
+                'sequence': template.sequence,
+                'vat_rule': template.vat_rule,
+                }
 
     @api.multi
     def action_create(self):

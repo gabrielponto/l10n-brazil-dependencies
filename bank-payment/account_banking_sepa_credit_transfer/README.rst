@@ -1,7 +1,6 @@
 .. image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
     :alt: License: AGPL-3
 
-====================================
 Account Banking SEPA Credit Transfer
 ====================================
 
@@ -33,23 +32,16 @@ This module is part of the OCA/bank-payment suite.
 Configuration
 =============
 
-* Create a Payment Mode dedicated to SEPA Credit Transfer.
-
-* Select the Payment Method *SEPA Credit Transfer to suppliers* (which is
-  automatically created upon module installation).
-
-* Check that this payment method uses the proper version of PAIN.
+No specific configuration.
 
 Usage
 =====
 
-In the menu *Accounting > Payments > Payment Order*, create a new
-payment order and select the Payment Mode dedicated to SEPA Credit
-Transfer that you created during the configuration step.
+* You need to choose first an SEPA export type on a payment mode.
 
-.. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
-   :alt: Try me on Runbot
-   :target: https://runbot.odoo-community.org/runbot/173/10.0
+For further information, please visit:
+
+ * https://www.odoo.com/forum/help-1
 
 Known issues / Roadmap
 ======================
@@ -59,10 +51,10 @@ Known issues / Roadmap
 Bug Tracker
 ===========
 
-Bugs are tracked on `GitHub Issues
-<https://github.com/OCA/bank-payment/issues>`_. In case of trouble, please
-check there if your issue has already been reported. If you spotted it first,
-help us smashing it by providing a detailed and welcomed feedback.
+Bugs are tracked on `GitHub Issues <https://github.com/OCA/bank-payment/issues>`_.
+In case of trouble, please check there if your issue has already been reported.
+If you spotted it first, help us smashing it by providing a detailed and welcomed feedback
+`here <https://github.com/OCA/bank-payment/issues/new?body=module:%20account_banking_sepa_credit_transfer%0Aversion:%208.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Credits
 =======
@@ -70,7 +62,7 @@ Credits
 Contributors
 ------------
 
-* Alexis de Lattre <alexis.delattre@akretion.com>
+* Alexis de Lattre
 * Pedro M. Baeza
 * Stéphane Bidoul <stephane.bidoul@acsone.eu>
 * Stefan Rijnhart
@@ -80,6 +72,7 @@ Contributors
 * Erwin van der Ploeg
 * Sandy Carter
 * Antonio Espinosa <antonioea@antiun.com>
+* Omar Castiñeira <omar@comunitea.com>
 
 Maintainer
 ----------

@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
@@ -15,11 +15,17 @@ msgstr ""
 
 #. module: account_due_list_payment_mode
 #: model:ir.model,name:account_due_list_payment_mode.model_account_move_line
-msgid "Journal Item"
+msgid "Journal Items"
 msgstr ""
 
 #. module: account_due_list_payment_mode
-#: model:ir.ui.view,arch_db:account_due_list_payment_mode.view_payments_mode_filter
+#: view:account.move.line:account_due_list_payment_mode.view_payments_mode_filter
+msgid "Month"
+msgstr ""
+
+#. module: account_due_list_payment_mode
+#: view:account.move.line:account_due_list_payment_mode.view_payments_mode_filter
+#: field:account.move.line,payment_mode_id:0
 msgid "Payment Mode"
 msgstr ""
 

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: account-payment (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-03 00:13+0000\n"
-"PO-Revision-Date: 2016-12-08 11:55+0000\n"
+"POT-Creation-Date: 2017-11-25 01:18+0000\n"
+"PO-Revision-Date: 2017-11-30 01:12+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/oca/OCA-account-"
 "payment-8-0/language/pt_BR/)\n"
@@ -20,22 +20,22 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_due_list
-#: model:ir.ui.view,arch_db:account_due_list.view_payments_filter
+#: view:account.move.line:account_due_list.view_payments_filter
 msgid "Due Date"
-msgstr ""
+msgstr "Data de Vencimento"
 
 #. module: account_due_list
-#: model:ir.ui.view,arch_db:account_due_list.view_payments_filter
+#: view:account.move.line:account_due_list.view_payments_filter
 msgid "From invoices"
 msgstr "Das Faturas"
 
 #. module: account_due_list
-#: model:ir.ui.view,arch_db:account_due_list.view_payments_filter
+#: view:account.move.line:account_due_list.view_payments_filter
 msgid "Group By..."
 msgstr "Agrupar Por"
 
 #. module: account_due_list
-#: model:ir.model.fields,help:account_due_list.field_account_move_line_payment_term_id
+#: help:account.move.line,payment_term_id:0
 msgid ""
 "If you use payment terms, the due date will be computed automatically at the "
 "generation of accounting entries. If you keep the payment term and the due "
@@ -44,152 +44,147 @@ msgid ""
 msgstr ""
 
 #. module: account_due_list
-#: model:ir.model.fields,field_description:account_due_list.field_account_move_line_stored_invoice_id
-#: model:ir.ui.view,arch_db:account_due_list.view_payments_filter
+#: view:account.move.line:account_due_list.view_payments_filter
+#: field:account.move.line,stored_invoice_id:0
 msgid "Invoice"
 msgstr "Faturas"
 
 #. module: account_due_list
-#: model:ir.model.fields,field_description:account_due_list.field_account_move_line_invoice_date
+#: field:account.move.line,invoice_date:0
 msgid "Invoice Date"
 msgstr "Data fatura"
 
 #. module: account_due_list
-#: model:ir.model.fields,field_description:account_due_list.field_account_move_line_invoice_user_id
+#: field:account.move.line,invoice_user_id:0
 msgid "Invoice salesperson"
 msgstr ""
 
 #. module: account_due_list
 #: model:ir.model,name:account_due_list.model_account_move_line
-#, fuzzy
-msgid "Journal Item"
+msgid "Journal Items"
 msgstr "Itens do Diário"
 
 #. module: account_due_list
-#: model:ir.model.fields,help:account_due_list.field_account_move_line_invoice_date
+#: help:account.move.line,invoice_date:0
 msgid "Keep empty to use the current date"
 msgstr ""
 
 #. module: account_due_list
-#: model:ir.ui.view,arch_db:account_due_list.view_payments_filter
+#: view:account.move.line:account_due_list.view_payments_filter
 msgid "Month"
 msgstr "Mês"
 
 #. module: account_due_list
-#: model:ir.ui.view,arch_db:account_due_list.view_payments_filter
+#: view:account.move.line:account_due_list.view_payments_filter
 msgid "Overdue"
 msgstr "Vencidas"
 
 #. module: account_due_list
-#: model:ir.ui.view,arch_db:account_due_list.view_payments_filter
+#: view:account.move.line:account_due_list.view_payments_filter
 msgid "Overdue payments"
 msgstr "Pagamentos Vencidos"
 
 #. module: account_due_list
-#: model:ir.ui.view,arch_db:account_due_list.view_payments_filter
+#: view:account.move.line:account_due_list.view_payments_filter
 msgid "Partner"
 msgstr "Parceiro"
 
 #. module: account_due_list
-#: model:ir.model.fields,field_description:account_due_list.field_account_move_line_partner_ref
+#: field:account.move.line,partner_ref:0
 msgid "Partner Ref"
 msgstr ""
 
 #. module: account_due_list
-#: model:ir.ui.view,arch_db:account_due_list.view_payments_filter
+#: view:account.move.line:account_due_list.view_payments_filter
 msgid "Payable"
 msgstr "Pagáveis"
 
 #. module: account_due_list
-#: model:ir.ui.view,arch_db:account_due_list.view_payments_filter
+#: view:account.move.line:account_due_list.view_payments_filter
 msgid "Payable payments"
 msgstr "Pagamentos a Pagar"
 
 #. module: account_due_list
-#: model:ir.model.fields,field_description:account_due_list.field_account_move_line_payment_term_id
+#: field:account.move.line,payment_term_id:0
 msgid "Payment Terms"
 msgstr ""
 
 #. module: account_due_list
-#: model:ir.ui.view,arch_db:account_due_list.view_payments_tree
+#: view:account.move.line:account_due_list.view_payments_tree
 msgid "Payments"
 msgstr "Pagamentos"
 
 #. module: account_due_list
 #: model:ir.actions.act_window,name:account_due_list.action_invoice_payments
 #: model:ir.ui.menu,name:account_due_list.menu_action_invoice_payments
-#: model:ir.ui.view,arch_db:account_due_list.view_payments_graph
-#: model:ir.ui.view,arch_db:account_due_list.view_payments_pivot
 msgid "Payments and due list"
 msgstr "Pagamentos e Lista de Vencimentos"
 
 #. module: account_due_list
-#: model:ir.ui.view,arch_db:account_due_list.view_payments_filter
+#: view:account.move.line:account_due_list.view_payments_filter
 msgid "Receivable"
 msgstr "Recebíveis"
 
 #. module: account_due_list
-#: model:ir.ui.view,arch_db:account_due_list.view_payments_filter
+#: view:account.move.line:account_due_list.view_payments_filter
 msgid "Receivable payments"
 msgstr "Pagamentos a Receber"
 
 #. module: account_due_list
-#: model:ir.model.fields,help:account_due_list.field_account_move_line_invoice_origin
+#: help:account.move.line,invoice_origin:0
 msgid "Reference of the document that produced this invoice."
 msgstr ""
 
 #. module: account_due_list
-#: model:ir.ui.view,arch_db:account_due_list.view_payments_filter
-msgid "Salesperson"
-msgstr ""
+#: field:account.move.line,maturity_residual:0
+msgid "Residual Amount"
+msgstr "Quantidade Residual"
 
 #. module: account_due_list
-#: model:ir.ui.view,arch_db:account_due_list.view_payments_filter
+#: view:account.move.line:account_due_list.view_payments_filter
+msgid "Salesperson"
+msgstr "Vendedor"
+
+#. module: account_due_list
+#: view:account.move.line:account_due_list.view_payments_filter
 msgid "Search Payments"
 msgstr "Procurar Pagamentos"
 
 #. module: account_due_list
-#: model:ir.model.fields,field_description:account_due_list.field_account_move_line_invoice_origin
+#: field:account.move.line,invoice_origin:0
 msgid "Source Doc"
 msgstr ""
 
 #. module: account_due_list
-#: model:ir.ui.view,arch_db:account_due_list.view_payments_tree
+#: help:account.move.line,maturity_residual:0
+msgid ""
+"The residual amount on a receivable or payable of a journal entry expressed "
+"in the company currency."
+msgstr ""
+"A quantidade residual em uma entrada de diário de recebíveis ou pagáveis é "
+"expressa na moeda da empresa."
+
+#. module: account_due_list
+#: view:account.move.line:account_due_list.view_payments_tree
 msgid "Total Credit"
 msgstr "Total de Crédito"
 
 #. module: account_due_list
-#: model:ir.ui.view,arch_db:account_due_list.view_payments_tree
+#: view:account.move.line:account_due_list.view_payments_tree
 msgid "Total Debit"
 msgstr "Total de Débito"
 
 #. module: account_due_list
-#: model:ir.ui.view,arch_db:account_due_list.view_payments_tree
+#: view:account.move.line:account_due_list.view_payments_tree
 msgid "Total Residual"
 msgstr "Total do Residual"
 
 #. module: account_due_list
-#: model:ir.ui.view,arch_db:account_due_list.view_payments_tree
-#, fuzzy
-msgid "Total Residual Currency"
-msgstr "Total do Residual"
-
-#. module: account_due_list
-#: model:ir.ui.view,arch_db:account_due_list.view_payments_filter
+#: view:account.move.line:account_due_list.view_payments_filter
 msgid "Unreconciled"
 msgstr "Não Reconciliados"
 
 #. module: account_due_list
-#: model:ir.ui.view,arch_db:account_due_list.view_payments_filter
+#: view:account.move.line:account_due_list.view_payments_filter
 msgid "Unreconciled payments"
 msgstr "Pagamentos não Reconciliados"
-
-#~ msgid "Residual Amount"
-#~ msgstr "Quantidade Residual"
-
-#~ msgid ""
-#~ "The residual amount on a receivable or payable of a journal entry "
-#~ "expressed in the company currency."
-#~ msgstr ""
-#~ "A quantidade residual em uma entrada de diário de recebíveis ou pagáveis "
-#~ "é expressa na moeda da empresa."

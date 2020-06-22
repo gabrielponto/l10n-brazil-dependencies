@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright 2015-2017 Eficent Business and IT Consulting Services
-     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
-<odoo>
+<openerp>
     <data>
+
         <record id="view_payments_tree" model="ir.ui.view">
             <field name="name">Payments</field>
             <field name="model">account.move.line</field>
@@ -12,11 +11,11 @@
                 <tree position="attributes">
                     <attribute name="editable">top</attribute>
                 </tree>
-                <field name="reconciled" position="after">
+                <field name="reconcile_partial_id" position="after">
                     <field name="aging_comments"/>
                 </field>
             </field>
         </record>
 
     </data>
-</odoo>
+</openerp>

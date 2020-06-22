@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-
-        <!-- Create Menu for Configuration and Generation Templates -->
-        <menuitem id="menu_account_fiscal_position_rule_template"
-                  parent="account.menu_finance_configuration" name="Fiscal Position Rule" sequence="21"/>
+<openerp>
+    <data>
 
         <!-- Fiscal Position Rule Template -->
         <record id="view_account_fiscal_position_rule_template_form" model="ir.ui.view">
@@ -12,25 +9,25 @@
             <field name="arch" type="xml">
                 <form string="Fiscal Position Rule Template">
                     <group>
-                        <group string="General" name="general" colspan="4">
+                        <group string="General" colspan="4">
                             <field name="name"/>
                             <field name="description"/>
                         </group>
-                        <group string="Origin" name="origin" colspan="4">
+                        <group string="Origin" colspan="4">
                             <field name="from_country"/>
                             <field name="from_state"/>
                         </group>
-                        <group string="Destination" name="destination">
+                        <group string="Destination">
                             <group string="Invoice">
                                 <field name="to_invoice_country"/>
                                 <field name="to_invoice_state"/>
                             </group>
-                            <group string="Shipping" name="shipping">
+                            <group string="Shipping">
                                 <field name="to_shipping_country"/>
                                 <field name="to_shipping_state"/>
                             </group>
                         </group>
-                        <group string="Configuration" name="configuration" colspan="4">
+                        <group string="Configuration" colspan="4">
                             <field name="date_start"/>
                             <field name="date_end"/>
                             <field name="fiscal_position_id"/>
@@ -72,14 +69,10 @@
             <field name="arch" type="xml">
                 <search string="Fiscal Position Rule Template">
                     <group col="14" colspan="4">
-                        <filter icon="terp-gtk-jump-to-ltr" string="Use in Sale" name="use_sale"
-                                domain="[('use_sale','=',True)]" help="Used in Sales orders"/>
-                        <filter icon="terp-gtk-jump-to-ltr" string="Use in Invoice" name="use_invoice"
-                                domain="[('use_invoice','=',True)]" help="used in invoices"/>
-                        <filter icon="terp-gtk-jump-to-ltr" string="Use in Picking" name="use_picking"
-                                domain="[('use_picking','=',True)]" help="used in Picking lists"/>
-                        <filter icon="terp-gtk-jump-to-rtl" string="Use in Purchase" name="use_purchase"
-                                domain="[('use_purchase','=',True)]" help="used in purchase"/>
+                        <filter icon="terp-gtk-jump-to-ltr" string="Use in Sale" name="use_sale" domain="[('use_sale','=',True)]" help="Used in Sales orders"/>
+                        <filter icon="terp-gtk-jump-to-ltr" string="Use in Invoice" name="use_invoice" domain="[('use_invoice','=',True)]" help="used in invoices"/>
+                        <filter icon="terp-gtk-jump-to-ltr" string="Use in Picking" name="use_picking" domain="[('use_picking','=',True)]" help="used in Picking lists"/>
+                        <filter icon="terp-gtk-jump-to-rtl" string="Use in Purchase" name="use_purchase" domain="[('use_purchase','=',True)]" help="used in purchase"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="from_country"/>
@@ -99,9 +92,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem action="action_account_fiscal_position_rule_template_form"
-                  id="menu_action_account_fiscal_position_rule_template_form"
-                  parent="menu_account_fiscal_position_rule_template" sequence="21"/>
+        <menuitem action="action_account_fiscal_position_rule_template_form" id="menu_action_account_fiscal_position_rule_template_form" parent="account.account_template_folder" sequence="21"/>
 
         <!-- Fiscal Position Rule -->
 
@@ -111,26 +102,26 @@
             <field name="arch" type="xml">
                 <form string="Fiscal Position Rule">
                     <group>
-                        <group string="General" name="general" colspan="4">
+                        <group string="General" colspan="4">
                             <field name="name"/>
                             <field name="description"/>
                         </group>
-                        <group string="Origin" name="origin" colspan="4">
+                        <group string="Origin" colspan="4">
                             <field name="company_id"/>
                             <field name="from_country"/>
                             <field name="from_state"/>
                         </group>
-                        <group string="Destination" name="destination">
-                            <group string="Invoice" name="invoice">
+                        <group string="Destination">
+                            <group string="Invoice">
                                 <field name="to_invoice_country"/>
                                 <field name="to_invoice_state"/>
                             </group>
-                            <group string="Shipping" name="shipping">
+                            <group string="Shipping">
                                 <field name="to_shipping_country"/>
                                 <field name="to_shipping_state"/>
                             </group>
                         </group>
-                        <group string="Configuration" name="configuration" colspan="4">
+                        <group string="Configuration" colspan="4">
                             <field name="date_start"/>
                             <field name="date_end"/>
                             <field name="fiscal_position_id"/>
@@ -173,14 +164,10 @@
             <field name="arch" type="xml">
                 <search string="Fiscal Position Rule">
                     <group col="14" colspan="4">
-                        <filter icon="terp-gtk-jump-to-ltr" string="Use in Sale" name="use_sale"
-                                domain="[('use_sale','=',True)]" help="Used in Sales Orders"/>
-                        <filter icon="terp-gtk-jump-to-ltr" string="Use in Invoice" name="use_invoice"
-                                domain="[('use_invoice','=',True)]" help="used in invoices"/>
-                        <filter icon="terp-gtk-jump-to-ltr" string="Use in Picking" name="use_picking"
-                                domain="[('use_picking','=',True)]" help="used in Picking list"/>
-                        <filter icon="terp-gtk-jump-to-rtl" string="Use in Purchase" name="use_purchase"
-                                domain="[('use_purchase','=',True)]" help="used in purchase"/>
+                        <filter icon="terp-gtk-jump-to-ltr" string="Use in Sale" name="use_sale" domain="[('use_sale','=',True)]" help="Used in Sales Orders"/>
+                        <filter icon="terp-gtk-jump-to-ltr" string="Use in Invoice" name="use_invoice" domain="[('use_invoice','=',True)]" help="used in invoices"/>
+                        <filter icon="terp-gtk-jump-to-ltr" string="Use in Picking" name="use_picking" domain="[('use_picking','=',True)]" help="used in Picking list"/>
+                        <filter icon="terp-gtk-jump-to-rtl" string="Use in Purchase" name="use_purchase" domain="[('use_purchase','=',True)]" help="used in purchase"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="from_country"/>
@@ -194,7 +181,6 @@
         </record>
 
         <!--  Wizard position fiscal rule -->
-
         <record id="view_wizard_account_fiscal_position_rule" model="ir.ui.view">
             <field name="name">Generate Fiscal Positions Rules from Templates</field>
             <field name="model">wizard.account.fiscal.position.rule</field>
@@ -220,8 +206,7 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem parent="menu_account_fiscal_position_rule_template"
-                  action="action_wizard_account_fiscal_position_rule" id="menu_wizard_fiscal_position_rule"/>
+        <menuitem parent="account.account_template_folder" action="action_wizard_account_fiscal_position_rule" id="menu_wizard_fiscal_position_rule"/>
 
         <record id="action_account_fiscal_position_rule_form" model="ir.actions.act_window">
             <field name="name">Fiscal Position Rule</field>
@@ -230,8 +215,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="menu_action_account_fiscal_position_rule_form"
-                  action="action_account_fiscal_position_rule_form" parent="account.account_account_menu"
-                  sequence="21"/>
+        <menuitem id="menu_action_account_fiscal_position_rule_form" action="action_account_fiscal_position_rule_form" parent="account.next_id_27" sequence="21"/>
 
-</odoo>
+    </data>
+</openerp>

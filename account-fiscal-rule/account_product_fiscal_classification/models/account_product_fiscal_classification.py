@@ -1,10 +1,29 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2014-Today GRAP (http://www.grap.coop)
-# @author: Sylvain LE GAL (https://twitter.com/legalsylvain)
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+##############################################################################
+#
+#    Account Product - Fiscal Classification module for Odoo
+#    Copyright (C) 2014 -Today GRAP (http://www.grap.coop)
+#    @author Sylvain LE GAL (https://twitter.com/legalsylvain)
+#    @author Renato Lima (https://twitter.com/renatonlima)
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
 
-from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+
+from openerp import models, fields, api, _
+from openerp.exceptions import ValidationError
 
 
 class AccountProductFiscalClassification(models.Model):
@@ -37,6 +56,7 @@ class AccountProductFiscalClassification(models.Model):
         relation='fiscal_classification_purchase_tax_rel',
         column1='fiscal_classification_id', column2='tax_id',
         string='Purchase Taxes', oldname="purchase_base_tax_ids", domain="""[
+            ('parent_id', '=', False),
             ('type_tax_use', 'in', ['purchase', 'all'])]""")
 
     sale_tax_ids = fields.Many2many(
@@ -44,17 +64,17 @@ class AccountProductFiscalClassification(models.Model):
         relation='fiscal_classification_sale_tax_rel',
         column1='fiscal_classification_id', column2='tax_id',
         string='Sale Taxes', oldname="sale_base_tax_ids", domain="""[
+            ('parent_id', '=', False),
             ('type_tax_use', 'in', ['sale', 'all'])]""")
 
     # Compute Section
-    @api.multi
+    @api.one
     def _compute_product_tmpl_info(self):
-        for fiscal_classif in self:
-            res = self.env['product.template'].search([
-                ('fiscal_classification_id', '=', fiscal_classif.id), '|',
-                ('active', '=', False), ('active', '=', True)])
-            fiscal_classif.product_tmpl_ids = res
-            fiscal_classif.product_tmpl_qty = len(res)
+        res = self.env['product.template'].search([
+            ('fiscal_classification_id', '=', self.id), '|',
+            ('active', '=', False), ('active', '=', True)])
+        self.product_tmpl_ids = res
+        self.product_tmpl_qty = len(res)
 
     # Overload Section
     @api.multi

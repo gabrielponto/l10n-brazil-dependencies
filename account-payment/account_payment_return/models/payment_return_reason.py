@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-# Copyright 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
+# © 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from openerp import models, fields, api
 
 
 class PaymentReturnReason(models.Model):

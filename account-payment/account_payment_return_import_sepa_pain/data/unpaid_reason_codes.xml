@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo noupdate="1">
+<openerp>
+<data noupdate="1">
 
     <record id="unpaid_reason_AC01" model="payment.return.reason">
         <field name="code">AC01</field>
@@ -82,4 +83,5 @@
         <field name="name">Specific Service offered by the Debtor Bank.</field>
     </record>
 
-</odoo>
+</data>
+</openerp>

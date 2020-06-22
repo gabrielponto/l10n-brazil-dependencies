@@ -4,8 +4,8 @@
 
 import logging
 
-from odoo.tests.common import TransactionCase
-from odoo.modules.module import get_module_resource
+from openerp.tests.common import TransactionCase
+from openerp.modules.module import get_module_resource
 
 
 _logger = logging.getLogger(__name__)
@@ -35,10 +35,10 @@ class TestPaymentReturnFile(TransactionCase):
         if not ids:
             # We will get assertion error, but to solve we need to see
             # what transactions have been added:
-            self.cr.execute("SELECT reference, amount "
-                            "FROM payment_return_line "
-                            "WHERE return_id=%s",
-                            (return_obj.id,))
+            self.cr.execute(
+                "select reference, amount"
+                " from payment_return_line"
+                " where return_id=%d" % return_obj.id)
             _logger.error(
                 "Transaction not found in %s" %
                 str(self.cr.fetchall())

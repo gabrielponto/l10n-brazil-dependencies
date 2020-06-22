@@ -18,14 +18,16 @@ msgstr ""
 
 #. module: account_due_list_payment_mode
 #: model:ir.model,name:account_due_list_payment_mode.model_account_move_line
-#, fuzzy
-msgid "Journal Item"
+msgid "Journal Items"
 msgstr "Apuntes contables"
 
 #. module: account_due_list_payment_mode
-#: model:ir.ui.view,arch_db:account_due_list_payment_mode.view_payments_mode_filter
+#: view:account.move.line:account_due_list_payment_mode.view_payments_mode_filter
+msgid "Month"
+msgstr "Mes"
+
+#. module: account_due_list_payment_mode
+#: view:account.move.line:account_due_list_payment_mode.view_payments_mode_filter
+#: field:account.move.line,payment_mode_id:0
 msgid "Payment Mode"
 msgstr "Modo de pago"
-
-#~ msgid "Month"
-#~ msgstr "Mes"

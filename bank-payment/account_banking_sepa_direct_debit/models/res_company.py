@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-# © 2013-2016 Akretion (Alexis de Lattre <alexis.delattre@akretion.com>)
+# © 2013 Akretion (www.akretion.com)
 # © 2014 Serv. Tecnol. Avanzados - Pedro M. Baeza
 # © 2016 Antiun Ingenieria S.L. - Antonio Espinosa
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import models, fields, api, _
+from openerp import models, fields, api, exceptions, _
 from .common import is_sepa_creditor_identifier_valid
-from odoo.exceptions import ValidationError
 
 
 class ResCompany(models.Model):
@@ -27,6 +26,6 @@ class ResCompany(models.Model):
             if company.sepa_creditor_identifier:
                 if not is_sepa_creditor_identifier_valid(
                         company.sepa_creditor_identifier):
-                    raise ValidationError(
-                        _("The SEPA Creditor Identifier '%s' is invalid.")
-                        % company.sepa_creditor_identifier)
+                    raise exceptions.Warning(
+                        _('Error'),
+                        _("Invalid SEPA Creditor Identifier."))

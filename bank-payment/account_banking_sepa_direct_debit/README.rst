@@ -1,7 +1,6 @@
 .. image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
     :alt: License: AGPL-3
 
-=================================
 Account Banking SEPA Direct Debit
 =================================
 
@@ -24,8 +23,8 @@ Installation
 ============
 
 This module depends on :
-
-* account_banking_pain_base
+* account_direct_debit
+* account_banking_pain_base',
 * account_banking_mandate
 
 This module is part of the OCA/bank-payment suite.
@@ -33,43 +32,18 @@ This module is part of the OCA/bank-payment suite.
 Configuration
 =============
 
-For setting the SEPA creditor identifier:
+To configure this module, you need to:
 
-#. Go to Accounting > Configuration > Settings.
-#. On the field "SEPA Creditor Identifier" in the section *SEPA/PAIN*, you can
-   fill the corresponding identifier.
-
-If your country requires several identifiers (like Spain), you must:
-
-#. Go to *Accounting > Configuration > Settings*.
-#. On the section *SEPA/PAIN*, check the mark "Multiple identifiers".
-#. Now go to *Accounting > Configuration > Management > Payment Modes*.
-#. Create a payment mode for your specific bank.
-#. Fill the specific identifier on the field "SEPA Creditor Identifier".
-
-For defining a payment mode that uses SEPA direct debit:
-
-#. Go to *Accounting > Configuration > Management > Payment Modes*.
-#. Create a record.
-#. Select the Payment Method *SEPA Direct Debit for customers* (which is
-   automatically created upon module installation).
-#. Check that this payment method uses the proper version of PAIN.
-#. If not, go *Accounting > Configuration > Management > Payment Methods*.
-#. Locate the "SEPA Direct Debit for customers" record and open it.
-#. Change the "PAIN version" according your needs.
-#. If you need to handle several PAIN versions, just duplicate the payment
-   method adjusting this field on each for having them.
+ * Create a payment mode and select an export type related to debit order ( eg. "SEPA direct debit ...")
 
 Usage
 =====
 
-In the menu *Accounting > Payments > Debit Order*, create a new debit
-order and select the Payment Mode dedicated to SEPA Direct Debit that
-you created during the configuration step.
+To use this module, you must select this payment mode on a direct debit order (Menu :Accounting > Payment > Direct Debit orders)
 
-.. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
-   :alt: Try me on Runbot
-   :target: https://runbot.odoo-community.org/runbot/173/10.0
+For further information, please visit:
+
+ * https://www.odoo.com/forum/help-1
 
 Known issues / Roadmap
 ======================
@@ -79,10 +53,10 @@ Known issues / Roadmap
 Bug Tracker
 ===========
 
-Bugs are tracked on `GitHub Issues
-<https://github.com/OCA/bank-payment/issues>`_. In case of trouble, please
-check there if your issue has already been reported. If you spotted it first,
-help us smashing it by providing a detailed and welcomed feedback.
+Bugs are tracked on `GitHub Issues <https://github.com/OCA/bank-payment/issues>`_.
+In case of trouble, please check there if your issue has already been reported.
+If you spotted it first, help us smashing it by providing a detailed and welcomed feedback
+`here <https://github.com/OCA/bank-payment/issues/new?body=module:%20account_banking_sepa_direct_debit%0Aversion:%208.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Credits
 =======
@@ -90,7 +64,7 @@ Credits
 Contributors
 ------------
 
-* Alexis de Lattre <alexis.delattre@akretion.com>
+* Alexis de Lattre
 * Pedro M. Baeza
 * Stéphane Bidoul <stephane.bidoul@acsone.eu>
 * Alexandre Fayolle
@@ -98,6 +72,7 @@ Contributors
 * Sandy Carter
 * Antonio Espinosa <antonioea@antiun.com>
 * Sergio Teruel <sergio.teruel@tecnativa.com>
+* Omar Castiñeira <omar@comunitea.com>
 
 
 Maintainer
@@ -105,12 +80,10 @@ Maintainer
 
 .. image:: http://odoo-community.org/logo.png
    :alt: Odoo Community Association
-   :target: https://odoo-community.org
+   :target: http://odoo-community.org
 
 This module is maintained by the OCA.
 
-OCA, or the Odoo Community Association, is a nonprofit organization whose
-mission is to support the collaborative development of Odoo features and
-promote its widespread use.
+OCA, or the Odoo Community Association, is a nonprofit organization whose mission is to support the collaborative development of Odoo features and promote its widespread use.
 
-To contribute to this module, please visit https://odoo-community.org.
+To contribute to this module, please visit http://odoo-community.org.

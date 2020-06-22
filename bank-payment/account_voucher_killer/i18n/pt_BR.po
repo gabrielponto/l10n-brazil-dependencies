@@ -20,9 +20,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_voucher_killer
-#: model:res.groups,name:account_voucher_killer.invoice_payment_user
-msgid "Payments for Invoices"
-msgstr ""
+#: model:res.groups,name:account_voucher_killer.invoice_voucher_user
+msgid "Use voucher in Invoices"
+msgstr "Usar recibos nas faturas"
 
-#~ msgid "Use voucher in Invoices"
-#~ msgstr "Usar recibos nas faturas"
+#. module: account_voucher_killer
+#: view:account.invoice:account_voucher_killer.invoice_voucher_group
+#: view:account.invoice:account_voucher_killer.invoice_voucher_group_supp_inv
+msgid "account_voucher_killer.invoice_voucher_user"
+msgstr ""

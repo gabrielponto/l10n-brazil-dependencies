@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
@@ -14,7 +14,13 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: account_voucher_killer
-#: model:res.groups,name:account_voucher_killer.invoice_payment_user
-msgid "Payments for Invoices"
+#: model:res.groups,name:account_voucher_killer.invoice_voucher_user
+msgid "Use voucher in Invoices"
+msgstr ""
+
+#. module: account_voucher_killer
+#: view:account.invoice:account_voucher_killer.invoice_voucher_group
+#: view:account.invoice:account_voucher_killer.invoice_voucher_group_supp_inv
+msgid "account_voucher_killer.invoice_voucher_user"
 msgstr ""
 

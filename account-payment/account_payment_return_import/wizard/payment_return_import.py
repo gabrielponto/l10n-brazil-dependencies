@@ -7,12 +7,11 @@ import base64
 from StringIO import StringIO
 from zipfile import ZipFile, BadZipfile  # BadZipFile in Python >= 3.2
 
-from odoo import _, api, models, fields
-from odoo.exceptions import Warning as UserError
+from openerp import api, models, fields
+from openerp.tools.translate import _
+from openerp.exceptions import Warning as UserError, RedirectWarning
 
-from odoo.addons.base_iban.models.res_partner_bank import pretty_iban
-
-from .base_parser import BaseParser
+from openerp.addons.base_iban.base_iban import _pretty_iban
 
 
 class PaymentReturnImport(models.TransientModel):
@@ -20,7 +19,7 @@ class PaymentReturnImport(models.TransientModel):
     _description = 'Import Payment Return'
 
     @api.model
-    def _compute_hide_journal_field(self):
+    def _get_hide_journal_field(self):
         """ Return False if the journal_id can't be provided by the parsed
         file and must be provided by the wizard."""
         return True
@@ -32,7 +31,7 @@ class PaymentReturnImport(models.TransientModel):
         'which doesn\'t allow automatic journal detection.')
     hide_journal_field = fields.Boolean(
         string='Hide the journal field in the view',
-        compute='_compute_hide_journal_field')
+        compute='_get_hide_journal_field')
     data_file = fields.Binary(
         'Payment Return File', required=True,
         help='Get you bank payment returns in electronic format from your '
@@ -142,14 +141,10 @@ class PaymentReturnImport(models.TransientModel):
                 -o 'partner_name': string
                 -o 'reference': string
         """
-        parser = BaseParser()
-        try:
-            return parser.parse(data_file)
-        except Exception:
-            raise UserError(_(
-                'Could not make sense of the given file.\n'
-                'Did you install the module to support this type of file?'
-            ))
+        raise UserError(_(
+            'Could not make sense of the given file.\n'
+            'Did you install the module to support this type of file?'
+        ))
 
     @api.model
     def _check_parsed_data(self, payment_returns):
@@ -168,7 +163,7 @@ class PaymentReturnImport(models.TransientModel):
         """ Get res.partner.bank ID """
         bank_account_id = None
         if account_number and len(account_number) > 4:
-            iban_number = pretty_iban(account_number)
+            iban_number = _pretty_iban(account_number)
             bank_account = self.env['res.partner.bank'].search(
                 [('acc_number', '=', iban_number)], limit=1)
             if bank_account:
@@ -220,7 +215,16 @@ class PaymentReturnImport(models.TransientModel):
                 reason = self.env['payment.return.reason'].name_search(
                     line_vals.pop('reason_code'))
                 if reason:
-                    line_vals['reason_id'] = reason[0][0]
+                    line_vals['reason'] = reason[0][0]
+        if 'date' in payret_vals and 'period_id' not in payret_vals:
+            # if the parser found a date but didn't set a period for this date,
+            # do this now
+            try:
+                payret_vals['period_id'] = (
+                    self.env['account.period'].find(dt=payret_vals['date']).id)
+            except RedirectWarning:
+                # if there's no period for the date, ignore resulting exception
+                pass
         return payret_vals
 
     @api.model

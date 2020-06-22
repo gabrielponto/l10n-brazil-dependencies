@@ -1,6 +1,6 @@
-[![Runbot Status](https://runbot.odoo-community.org/runbot/badge/flat/96/10.0.svg)](https://runbot.odoo-community.org/runbot/repo/github-com-oca-account-payment-96)
-[![Build Status](https://travis-ci.org/OCA/account-payment.svg?branch=10.0)](https://travis-ci.org/OCA/account-payment)
-[![Coverage Status](https://coveralls.io/repos/OCA/account-payment/badge.png?branch=10.0)](https://coveralls.io/r/OCA/account-payment?branch=10.0)
+[![Runbot Status](https://runbot.odoo-community.org/runbot/badge/flat/96/8.0.svg)](https://runbot.odoo-community.org/runbot/repo/github-com-oca-account-payment-96)
+[![Build Status](https://travis-ci.org/OCA/account-payment.svg?branch=8.0)](https://travis-ci.org/OCA/account-payment)
+[![Coverage Status](https://coveralls.io/repos/OCA/account-payment/badge.png?branch=8.0)](https://coveralls.io/r/OCA/account-payment?branch=8.0)
 
 Odoo account payment modules
 ============================
@@ -22,34 +22,35 @@ Available addons
 ----------------
 addon | version | summary
 --- | --- | ---
-[account_cash_discount_base](account_cash_discount_base/) | 10.0.1.0.0 | Account Cash Discount Base
-[account_cash_discount_payment](account_cash_discount_payment/) | 10.0.1.0.0 | Account Cash Discount Payment
-[account_cash_discount_write_off](account_cash_discount_write_off/) | 10.0.1.0.0 | Create an automatic writeoff for payment with discount on the payment order confirmation
-[account_check_printing_report_base](account_check_printing_report_base/) | 10.0.1.2.0 | Account Check Printing Report Base
-[account_check_printing_report_dlt103](account_check_printing_report_dlt103/) | 10.0.1.0.0 | Account Check Printing Report DLT103
-[account_check_printing_report_sslm102](account_check_printing_report_sslm102/) | 10.0.1.0.0 | Allows you to print SSLM102 lined checks.
-[account_check_report](account_check_report/) | 10.0.1.0.0 | Account Check Report
-[account_due_list](account_due_list/) | 10.0.2.0.0 | Payments Due list
-[account_due_list_aging_comments](account_due_list_aging_comments/) | 10.0.1.0.0 | Payments Due list aging comments
-[account_due_list_days_overdue](account_due_list_days_overdue/) | 10.0.0.1.0 | Payments Due list days overdue
-[account_due_list_payment_mode](account_due_list_payment_mode/) | 10.0.1.0.0 | Payment due list with payment mode
-[account_move_line_auto_reconcile_hook](account_move_line_auto_reconcile_hook/) | 10.0.1.0.0 | Adds Hook to account move line
-[account_partner_reconcile](account_partner_reconcile/) | 10.0.1.0.0 | Account Partner Reconcile
-[account_payment_batch_process](account_payment_batch_process/) | 10.0.1.0.1 | Process Payments in Batch
-[account_payment_credit_card](account_payment_credit_card/) | 10.0.1.0.0 | Add support for credit card payments
-[account_payment_residual_amount](account_payment_residual_amount/) | 10.0.1.0.0 | Extends the view of payments to show the residual amount (amount that has not yet been reconciled)
-[account_payment_return](account_payment_return/) | 10.0.1.1.1 | Manage the return of your payments
-[account_payment_return_import](account_payment_return_import/) | 10.0.1.0.0 | This module adds a generic wizard to import payment returnfile formats. Is only the base to be extended by anothermodules
-[account_payment_return_import_sepa_pain](account_payment_return_import_sepa_pain/) | 10.0.1.0.0 | Module to import SEPA Direct Debit Unpaid Report File Format PAIN.002.001.03
-[account_payment_show_invoice](account_payment_show_invoice/) | 10.0.1.1.0 | Extends the tree view of payments to show the paid invoices related to the payments using the vendor reference by default
-[account_payment_widget_amount](account_payment_widget_amount/) | 10.0.1.0.0 | Extends the payment widget to be able to choose the payment amount
-[partner_aging](partner_aging/) | 10.0.1.0.0 | Aging as a view - invoices and credits
+[account_due_list](account_due_list/) | 8.0.1.0.0 | Payments Due list
+[account_due_list_aging_comments](account_due_list_aging_comments/) | 8.0.0.2.0 | Payments Due list aging comments
+[account_due_list_days_overdue](account_due_list_days_overdue/) | 8.0.0.1.0 | Payments Due list days overdue
+[account_due_list_payment_mode](account_due_list_payment_mode/) | 8.0.1.0.0 | Payment due list with payment mode
+[account_payment_extension](account_payment_extension/) | 8.0.1.0.0 | Migration for account payment extension
+[account_payment_order_sequence](account_payment_order_sequence/) | 8.0.1.0.0 | Payment Order Sequence
+[account_payment_order_to_voucher](account_payment_order_to_voucher/) | 8.0.1.0.0 | Payment order to voucher
+[account_payment_return](account_payment_return/) | 8.0.1.1.0 | Manage the return of your payments
+[account_payment_return_import](account_payment_return_import/) | 8.0.1.0.0 | This module add a generic wizard to import payment return fileformats. Is only the base to be extended by another modules
+[account_payment_return_import_sepa_pain](account_payment_return_import_sepa_pain/) | 8.0.1.0.0 | Module to import SEPA Direct Debit Unpaid Report File Format PAIN.002.001.03
+[account_payment_term_multi_day](account_payment_term_multi_day/) | 8.0.1.0.0 | Multiple payment days for payment terms
+[account_vat_on_payment](account_vat_on_payment/) | 8.0.1.0.0 | VAT on Payment
+[account_voucher_cash_basis](account_voucher_cash_basis/) | 8.0.1.0.0 | Cash basis extensions for vouchers
+[account_voucher_invoice_number](account_voucher_invoice_number/) | 8.0.1.0.0 | Display linked invoices in voucher list
+[account_voucher_source_document](account_voucher_source_document/) | 8.0.1.0.0 | Source Document in Customer Payments
+[account_voucher_supplier_invoice_number](account_voucher_supplier_invoice_number/) | 8.0.1.0.0 | Supplier Invoice Number In Payment Vouchers
+[purchase_payment](purchase_payment/) | 8.0.1.0.0 | Migration for purchase payment
+[sale_payment](sale_payment/) | 8.0.1.0.0 | Migration for sale_payment
 
 
 Unported addons
 ---------------
 addon | version | summary
 --- | --- | ---
-[account_vat_on_payment](account_vat_on_payment/) | 8.0.1.0.0 (unported) | VAT on payment
+[account_voucher_display_writeoff](account_voucher_display_writeoff/) | 1.0r089 (unported) | Account voucher display writeoff
+[account_voucher_tax_filter](account_voucher_tax_filter/) | 1.0r028 (unported) | Account voucher tax filter
+[nan_account_bank_statement](nan_account_bank_statement/) | 0.1 (unported) | nan_account_bank_statement
+[pxgo_bank_statement_analytic](pxgo_bank_statement_analytic/) | 1.0 (unported) | Pexego - Analytic in Bank Statements
+[pxgo_bank_statement_running_balance](pxgo_bank_statement_running_balance/) | 1.0 (unported) | Pexego - Running balance in Bank Statements
+[pxgo_cash_statement](pxgo_cash_statement/) | 1.0 (unported) | Pexego - Cash Statements
 
 [//]: # (end addons)
