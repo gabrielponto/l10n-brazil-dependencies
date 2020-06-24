@@ -12,3 +12,4 @@ COPY account-fiscal-rule /addons-br-dependencies/
 COPY account-payment /addons-br-dependencies/
 COPY bank-payment /addons-br-dependencies/
 COPY reporting-engine /addons-br-dependencies/
+COPY server-tools /addons-br-dependencies/
